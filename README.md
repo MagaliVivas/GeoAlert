@@ -23,3 +23,4 @@ Ingresando luego en la carpeta f7-v606 podrá usar el template de Framework 7, V
 "# GeoAlert" 
 "# GeoAlert" 
 "# GeoAlert" 
+"# GeoAlert" 
