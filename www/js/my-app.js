@@ -1,7 +1,7 @@
   
 // If we need to use custom DOM library, let's save it to $$ variable:
 var $$ = Dom7;
-
+var registro = true;
 
 var app = new Framework7({
     // App root element
@@ -18,6 +18,8 @@ var app = new Framework7({
     routes: [
       { path: '/about/', url: 'about.html', },
       { path: '/registro/', url: 'registro.html', },
+      { path: '/ingresar/', url: 'ingresar.html', },
+      { path: '/inicio/', url: 'inicio.html', },
     ]
     // ... other parameters
   });
@@ -30,6 +32,11 @@ $$(document).on('deviceready', function() {
 });
 
 $$(document).on('page:init', '.page[data-name="index"]', function (e) {
+    $$("#Ir-Ingresar").on('click', function() {
+        console.log('click en Ingresar');
+        mainView.router.navigate('/ingresar/');
+              
+    });
     $$("#Ir-Registrarse").on('click', function() {
         console.log('click en Registrarse');
         mainView.router.navigate('/registro/');
@@ -37,6 +44,17 @@ $$(document).on('page:init', '.page[data-name="index"]', function (e) {
     });
 })
 
+
+$$(document).on('page:init', '.page[data-name="ingresar"]', function (e) {
+    // Do something here when page with data-name="about" attribute loaded and initialized
+    $$("#BtnIngresar").on('click', function() {
+    if(($$("#I-email").val() == "" )|| ($$("#I-password").val() == "")){
+        app.dialog.alert("Complete todos los campos", "Atención");
+    }  else {
+        mainView.router.navigate('/inicio/');
+    }
+    })
+})
 // Option 2. Using live 'page:init' event handlers for each page
 $$(document).on('page:init', '.page[data-name="about"]', function (e) {
     // Do something here when page with data-name="about" attribute loaded and initialized
@@ -56,6 +74,9 @@ var Password="";
             Password= $$("#R-password").val();
             console.log("La contraseña es " + Password + "Y el mail es " + Email);
             CrearUsuario(Email,Password);
+            if (registro == true) {
+                mainView.router.navigate('/inicio/');
+            }
         /*}else{
             console.log("llegue else");
             app.dialog.alert("Completa todo los campos","Atención");
@@ -70,6 +91,7 @@ function CrearUsuario(varEmail,varPassword) {
     console.log("Hola");
     firebase.auth().createUserWithEmailAndPassword(varEmail, varPassword)
         .catch(function(error) {
+            registro= false;
             // Handle Errors here.
             var errorCode = error.code;
             var errorMessage = error.message;
