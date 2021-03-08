@@ -20,6 +20,7 @@ var app = new Framework7({
       { path: '/registro/', url: 'registro.html', },
       { path: '/ingresar/', url: 'ingresar.html', },
       { path: '/inicio/', url: 'inicio.html', },
+      { path: '/crear-alarma/', url: 'crear-alarma.html', },
     ]
     // ... other parameters
   });
@@ -62,6 +63,13 @@ $$(document).on('page:init', '.page[data-name="about"]', function (e) {
     alert('Hello');
 })
 
+
+$$(document).on('page:init', '.page[data-name="inicio"]', function (e) {
+    // Do something here when page with data-name="about" attribute loaded and initialized
+    $$("#CrearAlarma").on('click', function() {
+        mainView.router.navigate('/crear-alarma/');
+    })
+})
 
 $$(document).on('page:init', '.page[data-name="registro"]', function (e) {
 var Email="";

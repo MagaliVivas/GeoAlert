@@ -1,5 +1,9 @@
 /* Your app custom styles here */
 /* poppins-regular - latin */
+*{
+  background-color: slategray;
+  color: white;
+}
 @font-face {
   font-family: 'Poppins';
   font-style: normal;
@@ -85,3 +89,26 @@
 }
 
 
+#ContPadre {
+text-align: center;
+align-items: center;
+  /*
+  display: flex;
+  padding: 0px;
+  margin: 0px;
+}*/
+}
+.imgtoolbar{
+  padding: 0px;
+  margin: 1px;
+}
+.ContHijo{
+  text-align: center;
+  align-items: center;
+}
+
+  /*
+  flex-direction: column;
+  padding: 0px;
+  margin: 0px;
+}**/
