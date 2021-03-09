@@ -76,19 +76,10 @@ var Email="";
 var Password="";
     $$("#BtnRegistrarse").on('click', function() {
         console.log("llegue a funcion registrarse");
-        /*if(($$("#R-nombre").val() != "" )&& ($$("#R-email").val() != "") && ($$("#R-password").val() != "")){
-            console.log("llegue if");*/
             Email= $$("#R-email").val();
             Password= $$("#R-password").val();
             console.log("La contraseña es " + Password + "Y el mail es " + Email);
             CrearUsuario(Email,Password);
-            if (registro == true) {
-                mainView.router.navigate('/inicio/');
-            }
-        /*}else{
-            console.log("llegue else");
-            app.dialog.alert("Completa todo los campos","Atención");
-        };*/
     });
 })
 
@@ -113,5 +104,11 @@ function CrearUsuario(varEmail,varPassword) {
                 }
             }
             console.log(error);
+            /*Si coloco el "if (registro == true)" acá entra solo por error*/
         });
+        /*Si coloco el "if (registro == true)" acá llega tarde*/
+                    if (registro == true) {
+                console.log("entré al if de crear usuario");
+                mainView.router.navigate('/inicio/');
+            }
 }
