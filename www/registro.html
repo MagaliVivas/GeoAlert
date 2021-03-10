@@ -11,12 +11,55 @@
         </div>
     </div>
     <div class="page-content">
-        <div class="block-title">Ingrese los siguientes datos para registrarse:</div>
+        <!--<div class="block-title">Ingrese los siguientes datos para registrarse:</div>
         <div class="block block-strong">
-        <input type="text" id="R-nombre" placeholder="Nombre de usuario" />
-        <input type="e-mail" id="R-email" placeholder="Correo electronico"/>
-        <input type="password" id="R-password" placeholder="Contraseña"/>
-        <input type="submit" value="Registrarse" id="BtnRegistrarse">
+        <div><input type="text" id="R-nombre" placeholder="Nombre de usuario" /></div>
+        <div><input type="e-mail" id="R-email" placeholder="Correo electronico"/></div>
+        <div><input type="password" id="R-password" placeholder="Contraseña"/></div>
+        <div><input type="submit" value="Registrarse" id="BtnRegistrarse"></div>
+        </div>-->
+        <div class="page no-navbar no-toolbar no-swipeback">
+        <div class="page-content login-screen-content">
+          <div class="login-screen-title">GeoAlert</div>
+          <form>
+            <div class="list">
+              <ul>
+                <li class="item-content item-input">
+                  <div class="item-inner">
+                    <div class="item-title item-label">Usuario</div>
+                    <div class="item-input-wrap">
+                      <input type="text" id="R-nombre" name="usario" placeholder="Ingresa usuario" />
+                    </div>
+                  </div>
+                </li>
+                <li class="item-content item-input">
+                  <div class="item-inner">
+                    <div class="item-title item-label">E-mail</div>
+                    <div class="item-input-wrap">
+                      <input type="text" name="email" id="R-email" placeholder="Ingresa e-mail" />
+                    </div>
+                  </div>
+                </li>
+                <li class="item-content item-input">
+                  <div class="item-inner">
+                    <div class="item-title item-label">Contraseña</div>
+                    <div class="item-input-wrap">
+                      <input type="password" id="R-password" name="contraseña" placeholder="Ingresa contraseña" />
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="list">
+              <ul>
+                <li><a href="#" id="BtnRegistrarse" class="list-button">ENTRAR</a></li>
+              </ul>
+              <div class="block-footer">
+                <p>Si ya sos usario, <a href="/registro/" class="link back"> ingresá acá</a></p>
+              </div>
+            </div>
+          </form>
         </div>
+      </div>
     </div>
 </div>

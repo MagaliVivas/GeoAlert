@@ -89,14 +89,14 @@
 }
 
 
-#ContPadre {
+/**#ContPadre {
 text-align: center;
 align-items: center;
   /*
   display: flex;
   padding: 0px;
   margin: 0px;
-}*/
+}*//**
 }
 .imgtoolbar{
   padding: 0px;
@@ -105,10 +105,14 @@ align-items: center;
 .ContHijo{
   text-align: center;
   align-items: center;
+}*/
+
+.invisible {
+  display: none;
+  visibility: hidden;
 }
 
-  /*
-  flex-direction: column;
-  padding: 0px;
-  margin: 0px;
-}**/
+.visible {
+  display: block;
+  visibility: visible;
+}

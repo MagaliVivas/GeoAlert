@@ -61,13 +61,71 @@
         
         <!-- Initial Page, "data-name" contains page name -->
             <div data-name="index" class="page" id=Index>
-                <div></div>
+          <!--      <div></div>
                 <div><h1>¡Bienvenido!</h1></div>
                 <div> <button id="Ir-Registrarse" class="Btnindex">REGISTRARSE</button></div>
                 <div> <button id="Ir-Ingresar" class="Btnindex">INGRESAR</button></div>
             </div>
         </div>
+    </div> -->
+
+  <div class="page no-navbar no-toolbar no-swipeback">
+    <div class="page-content login-screen-content">
+      <div class="login-screen-title">GeoAlert</div>
+      <form>
+        <div class="list">
+          <ul>
+            <li class="item-content item-input">
+              <div class="item-inner">
+                <div class="item-title item-label">E-mail</div>
+                <div class="item-input-wrap">
+                  <input type="e-mail" name="email" placeholder="Ingresa e-mail" />
+                </div>
+              </div>
+            </li>
+            <li class="item-content item-input">
+              <div class="item-inner">
+                <div class="item-title item-label">Contraseña</div>
+                <div class="item-input-wrap">
+                  <input type="password" name="password" placeholder="Ingresa contraseña" />
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="list">
+          <ul>
+            <li><a href="#" id="BtnIngresar" class="list-button">ENTRAR</a></li>
+          </ul>
+          <div class="block-footer">
+            <p>Si no sos usario, <a href="#" id="Ir-Registrarse"class="link back"> registrate acá</a></p>
+          </div>
+        </div>
+      </form>
     </div>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         <!-- The core Firebase JS SDK is always required and must be listed first -->
     <script src="https://www.gstatic.com/firebasejs/8.2.10/firebase-app.js"></script>

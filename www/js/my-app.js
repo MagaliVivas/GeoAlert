@@ -1,7 +1,7 @@
   
 // If we need to use custom DOM library, let's save it to $$ variable:
 var $$ = Dom7;
-var registro = true;
+
 
 var app = new Framework7({
     // App root element
@@ -33,11 +33,26 @@ $$(document).on('deviceready', function() {
 });
 
 $$(document).on('page:init', '.page[data-name="index"]', function (e) {
-    $$("#Ir-Ingresar").on('click', function() {
-        console.log('click en Ingresar');
-        mainView.router.navigate('/ingresar/');
-              
+    $$("#BtnIngresar").on('click', function() {
+    if(($$("#I-email").val() == "" )|| ($$("#I-password").val() == "")){
+        app.dialog.alert("Complete todos los campos", "Atención");
+    }  else {
+        mainView.router.navigate('/inicio/');
+    }
+    })
+    $$('.login-screen').on('loginscreen:open', function (e) {
+      console.log('Login screen open')
     });
+    $$('.login-screen').on('loginscreen:opened', function (e) {
+      console.log('Login screen opened')
+    });
+    $$('.login-screen').on('loginscreen:close', function (e) {
+      console.log('Login screen close')
+    });
+    $$('.login-screen').on('loginscreen:closed', function (e) {
+      console.log('Login screen closed')
+    });
+    
     $$("#Ir-Registrarse").on('click', function() {
         console.log('click en Registrarse');
         mainView.router.navigate('/registro/');
@@ -48,13 +63,7 @@ $$(document).on('page:init', '.page[data-name="index"]', function (e) {
 
 $$(document).on('page:init', '.page[data-name="ingresar"]', function (e) {
     // Do something here when page with data-name="about" attribute loaded and initialized
-    $$("#BtnIngresar").on('click', function() {
-    if(($$("#I-email").val() == "" )|| ($$("#I-password").val() == "")){
-        app.dialog.alert("Complete todos los campos", "Atención");
-    }  else {
-        mainView.router.navigate('/inicio/');
-    }
-    })
+    
 })
 // Option 2. Using live 'page:init' event handlers for each page
 $$(document).on('page:init', '.page[data-name="about"]', function (e) {
@@ -62,6 +71,22 @@ $$(document).on('page:init', '.page[data-name="about"]', function (e) {
     console.log(e);
     alert('Hello');
 })
+
+
+
+$$(document).on('page:init', '.page[data-name="crear-alarma"]', function (e) {
+    // Do something here when page with data-name="about" attribute loaded and initialized
+ $$("#BtnExtenderGrupo").on('click', function() {
+    $$("#GrupoExt").removeClass(".invisible").addClass(".visible");
+    console.log("entre a remove class de grupo");
+ })
+ $$("#BtnExtenderZona").on('click', function() {
+    $$("#ZonaExt").removeClass(".invisible").addClass(".visible");
+    console.log("Entre a remove class de zona");
+ })
+})
+
+
 
 
 $$(document).on('page:init', '.page[data-name="inicio"]', function (e) {
@@ -84,11 +109,18 @@ var Password="";
 })
 
 
-
-
 function CrearUsuario(varEmail,varPassword) {
+    var registro = true;
     console.log("Hola");
+    console.log("el valor de la variable inicio booleana es " + registro);
     firebase.auth().createUserWithEmailAndPassword(varEmail, varPassword)
+        .then(function(){
+             if (registro == true) {
+                console.log("entré al if de crear usuario");
+                mainView.router.navigate('/inicio/');
+            }
+        console.log("el valor de la variable verdadero booleana es " + registro);
+        } )
         .catch(function(error) {
             registro= false;
             // Handle Errors here.
@@ -104,11 +136,6 @@ function CrearUsuario(varEmail,varPassword) {
                 }
             }
             console.log(error);
-            /*Si coloco el "if (registro == true)" acá entra solo por error*/
+            console.log("el valor de la variable booleana false es " + registro);
         });
-        /*Si coloco el "if (registro == true)" acá llega tarde*/
-                    if (registro == true) {
-                console.log("entré al if de crear usuario");
-                mainView.router.navigate('/inicio/');
-            }
 }
