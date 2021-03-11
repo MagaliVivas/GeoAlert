@@ -18,14 +18,15 @@ var app = new Framework7({
     routes: [
       { path: '/about/', url: 'about.html', },
       { path: '/registro/', url: 'registro.html', },
-      { path: '/ingresar/', url: 'ingresar.html', },
       { path: '/inicio/', url: 'inicio.html', },
       { path: '/crear-alarma/', url: 'crear-alarma.html', },
+      { path: '/ayuda/', url: 'ayuda.html', }
     ]
     // ... other parameters
   });
 
 var mainView = app.views.create('.view-main');
+var NombreUsuario = "";
 
 // Handle Cordova Device Ready Event
 $$(document).on('deviceready', function() {
@@ -77,11 +78,11 @@ $$(document).on('page:init', '.page[data-name="about"]', function (e) {
 $$(document).on('page:init', '.page[data-name="crear-alarma"]', function (e) {
     // Do something here when page with data-name="about" attribute loaded and initialized
  $$("#BtnExtenderGrupo").on('click', function() {
-    $$("#GrupoExt").removeClass(".invisible").addClass(".visible");
+    $$("#GrupoExt").removeClass("invisible").addClass("visible");
     console.log("entre a remove class de grupo");
  })
  $$("#BtnExtenderZona").on('click', function() {
-    $$("#ZonaExt").removeClass(".invisible").addClass(".visible");
+    $$("#ZonaExt").removeClass("invisible").addClass("visible");
     console.log("Entre a remove class de zona");
  })
 })
@@ -94,6 +95,13 @@ $$(document).on('page:init', '.page[data-name="inicio"]', function (e) {
     $$("#CrearAlarma").on('click', function() {
         mainView.router.navigate('/crear-alarma/');
     })
+    $$("#BtnAyuda").on('click', function() {
+        $$("#PanelLateral").on('open', function () {
+            app.panel.close();
+      });
+        mainView.router.navigate('/ayuda/');
+    })
+    $$("#HolaAyuda").val("Hola NOMBRE, ¿En qué puedo ayudarte?" );
 })
 
 $$(document).on('page:init', '.page[data-name="registro"]', function (e) {
@@ -105,6 +113,7 @@ var Password="";
             Password= $$("#R-password").val();
             console.log("La contraseña es " + Password + "Y el mail es " + Email);
             CrearUsuario(Email,Password);
+        NombreUsuario = $$("#I-email").val(); 
     });
 })
 

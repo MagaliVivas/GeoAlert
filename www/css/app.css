@@ -89,23 +89,6 @@
 }
 
 
-/**#ContPadre {
-text-align: center;
-align-items: center;
-  /*
-  display: flex;
-  padding: 0px;
-  margin: 0px;
-}*//**
-}
-.imgtoolbar{
-  padding: 0px;
-  margin: 1px;
-}
-.ContHijo{
-  text-align: center;
-  align-items: center;
-}*/
 
 .invisible {
   display: none;
@@ -115,4 +98,8 @@ align-items: center;
 .visible {
   display: block;
   visibility: visible;
+}
+
+.SeccionAyuda {
+  border: 1px white solid;
 }

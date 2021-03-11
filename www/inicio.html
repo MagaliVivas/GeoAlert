@@ -1,16 +1,67 @@
 <div class="page" data-name="inicio">
 <div class="navbar">
     <div class="navbar-inner sliding">
-        <div class="left">
-            <a href="busqueda.html" class="left"><img src="img/search.png"/></a>
-            <a href="menu.html" class="left"><img src="img/menu.png"/></a>
-            <div class="title right">GeoAlert</div>
+        <div class="left row">
+            <a href="busqueda.html" class="rigth col-25"><img src="img/search.png"/></a>
+            <a href="#" id="AbrirPanel" class="button button-fill panel-open col-25" data-panel=".panel-right-1"><img src="img/menu.png"/></a>
+            <div class="title left col-50">GeoAlert</div>
         </div>
     </div>
 </div>
  
   <!---------------------------------->        
     <div class="page-content">
+        <div id="PanelLateral" class="panel panel-right panel-right-1 panel-cover panel-resizable panel-init">
+      <div class="block">
+            <div class="list">
+                <ul>
+                    <li class="accordion-item"><a class="item-content item-link" href="#">
+                        <div class="item-inner">
+                            <div class="item-title">Cuenta</div>
+                        </div>
+                    </a>
+                        <div class="accordion-item-content">
+                            <div class="block">
+                                <p>Administrar cuenta</p>
+                                <p>Cerrar sesión</p>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="accordion-item"><a class="item-content item-link" href="#">
+                        <div class="item-inner">
+                            <div class="item-title">Grupos</div>
+                        </div>
+                    </a>
+                        <div class="accordion-item-content">
+                            <div class="block">
+                                <p>Grupo 1</p>
+                                <p>Grupo 2</p>
+                                <p>Grupo 3</p>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="accordion-item"><a class="item-content item-link" href="#">
+                        <div class="item-inner">
+                            <div class="item-title">Contactos</div>
+                        </div>
+                    </a>
+                        <div class="accordion-item-content">
+                            <div class="block">
+                                <p>Contacto 1</p>
+                                <p>Contacto 2</p>
+                                <p>Contacto 3</p>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+        <p><a href="#" id="BtnAyuda">Ayuda</a></p>
+        <p><a class="panel-close" href="#">Cerrar</a></p>
+      </div>
+    </div>
+
+
         <hr/>
         <p><h3>Recibidas</h3></p>
         <hr/>
@@ -49,12 +100,10 @@
     </div>
     <!-- Toolbar -->
         <div class="toolbar toolbar-bottom">
-            <div class="toolbar-inner" id="ContPadre">
-                <div >
-                    <a href="#" class="imgtoolbar" ><img src="img/recibidas.png"></a>
-                </div>
-                <div>
-                    <a href="#" class="imgtoolbar"><img src="img/enviadas.png"></a>
+            <div class="toolbar-inner">
+                <div class="row">
+                        <a href="#" class="col"><img src="img/recibidas.png"></a>
+                        <a href="#" class="col"><img src="img/enviadas.png"></a>
                 </div>
             </div>
         </div>
