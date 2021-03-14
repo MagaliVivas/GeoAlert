@@ -59,3 +59,9 @@
   font-feature-settings: "liga";
   text-align: center;
 }
+:root {
+  --f7-theme-color: #00FF80;
+  --f7-theme-color-rgb: 0, 255, 128;
+  --f7-theme-color-shade: #00d66c;
+  --f7-theme-color-tint: #29ff94;
+}

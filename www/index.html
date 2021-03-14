@@ -23,81 +23,70 @@
     <meta name="color-scheme" content="light dark">
 
     <!-- Your app title -->
-    <title>GeoAlert</title>
+    <title class="Titulo">GeoAlert</title>
     <!-- Path to Framework7 Library CSS -->
     <link rel="stylesheet" href="lib/framework7/framework7-bundle.min.css">
     <!-- Path to icons -->
     <link rel="stylesheet" href="css/icons.css">
     <!-- Path to your custom app styles-->
     <link rel="stylesheet" href="css/app.css">
+    <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-firestore.js"></script>
+     <script src="https://js.api.here.com/v3/3.1/mapsjs-core.js" type="text/javascript" charset="utf-8"></script>
+ 
+    <script src="https://js.api.here.com/v3/3.1/mapsjs-service.js" type="text/javascript" charset="utf-8"></script>
+    
+    <!-- Events Maps -->
+    <script src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js" type="text/javascript" charset="utf-8"></script>
+    
+    <!-- UI Maps -->
+    <script src="https://js.api.here.com/v3/3.1/mapsjs-ui.js" type="text/javascript" charset="utf-8"></script>
+ 
+    <link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css" />
+
+
 </head>
 
 <body>
     <div id="app">
         <!-- Statusbar overlay -->
-        <div class="statusbar"></div>
+        <div class="statusbar theme-dark"></div>
     
         <!-- Your main view, should have "view-main" class -->
-        <div class="view view-main">
-        
-            <!-- Top Navbar -->
-            <!--<div class="navbar">
-                <div class="navbar-bg"></div>
-                <div class="navbar-inner">
-                    <div class="left"><i class="icon icon-back"></i></div>
-                    <div class="title">Page Title</div>
-                    <div class="right"><i class="icon icon-forward"></i></div>
-                </div>
-            </div>-->
-    
-            <!-- Toolbar -->
-            <!--<div class="toolbar toolbar-bottom">
-                <div class="toolbar-inner">-->
-                <!-- Toolbar links -->
-                <!--<a href="#" class="link">Link 1</a>
-                <a href="#" class="link">Link 2</a>
-                </div>
-            </div>-->
+        <div class="view view-main theme-dark">
         
         <!-- Initial Page, "data-name" contains page name -->
-            <div data-name="index" class="page" id=Index>
-          <!--      <div></div>
-                <div><h1>¡Bienvenido!</h1></div>
-                <div> <button id="Ir-Registrarse" class="Btnindex">REGISTRARSE</button></div>
-                <div> <button id="Ir-Ingresar" class="Btnindex">INGRESAR</button></div>
-            </div>
-        </div>
-    </div> -->
+            <div data-name="index" class="page theme-dark" id=Index>
 
-  <div class="page no-navbar no-toolbar no-swipeback">
-    <div class="page-content login-screen-content">
-      <div class="login-screen-title">GeoAlert</div>
+
+  <div class="page no-navbar no-toolbar no-swipeback theme-dark">
+    <div class="page-content login-screen-content theme-dark">
+      <div class="login-screen-title theme-dark">GeoAlert</div>
       <form>
-        <div class="list">
+        <div class="list theme-dark">
           <ul>
-            <li class="item-content item-input">
-              <div class="item-inner">
-                <div class="item-title item-label">E-mail</div>
-                <div class="item-input-wrap">
-                  <input type="e-mail" name="email" placeholder="Ingresa e-mail" value="vivasmagali.c@gmail.com" />
+            <li class="item-content item-input theme-dark">
+              <div class="item-inner theme-dark">
+                <div class="item-title item-label theme-dark">E-mail</div>
+                <div class="item-input-wrap theme-dark">
+                  <input type="e-mail" id="I-email" name="email" placeholder="Ingresa e-mail" value="vivasmagali.c@gmail.com" />
                 </div>
               </div>
             </li>
-            <li class="item-content item-input">
-              <div class="item-inner">
-                <div class="item-title item-label">Contraseña</div>
-                <div class="item-input-wrap">
-                  <input type="password" name="password" placeholder="Ingresa contraseña" value="Hermosos49" />
+            <li class="item-content item-input theme-dark">
+              <div class="item-inner theme-dark">
+                <div class="item-title item-label theme-dark">Contraseña</div>
+                <div class="item-input-wrap theme-dark">
+                  <input type="password" id="I-password" name="password" placeholder="Ingresa contraseña" value="Hermosos49" />
                 </div>
               </div>
             </li>
           </ul>
         </div>
-        <div class="list">
+        <div class="list theme-dark">
           <ul>
             <li><a href="#" id="BtnIngresar" class="list-button">ENTRAR</a></li>
           </ul>
-          <div class="block-footer">
+          <div class="block-footer theme-dark">
             <p>Si no sos usario, <a href="#" id="Ir-Registrarse" class="link back"> registrate acá</a></p>
           </div>
         </div>

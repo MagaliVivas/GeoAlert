@@ -1,8 +1,18 @@
 /* Your app custom styles here */
 /* poppins-regular - latin */
-*{
-  background-color: slategray;
+/**{
+  background-color: black;
   color: white;
+}*/
+
+:root {
+  --f7-theme-color: #00FF80;
+  --f7-theme-color-rgb: 0, 255, 128;
+  --f7-theme-color-shade: #00d66c;
+  --f7-theme-color-tint: #29ff94;
+}
+.title {
+  text-shadow: #00FF80;
 }
 @font-face {
   font-family: 'Poppins';
@@ -103,3 +113,26 @@
 .SeccionAyuda {
   border: 1px white solid;
 }
+
+.imgtoolbar {
+  align-items: center;
+}
+
+
+/*
+.ON {
+  color: #00FF80;
+}
+/*
+.text-color-primary {
+  --f7-theme-color-text-color: #00FF80;
+}
+.bg-color-primary {
+  --f7-theme-color-bg-color: #00FF80;
+}
+.border-color-primary {
+  --f7-theme-color-border-color: #00FF80;
+}
+.ripple-color-primary {
+  --f7-theme-color-ripple-color: #00FF80;
+}*/
