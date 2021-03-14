@@ -118,10 +118,23 @@
   align-items: center;
 }
 
+#PanelLateral{
+  background-color: black;
+}
 
-/*
-.ON {
-  color: #00FF80;
+.OFF {
+  color:white;
+}
+
+.Contenedor {
+  display: flex;
+}
+
+#Logo{
+  height: 23vw;
+  width: 29vw;
+  padding-left: 35%;
+  
 }
 /*
 .text-color-primary {

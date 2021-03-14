@@ -185,18 +185,23 @@ $$(document).on('page:init', '.page[data-name="inicio"]', function (e) {
       });
         mainView.router.navigate('/ayuda/');
     })
-    $$("#Enviadas").on('click', function() {
-        $$("#Recibidas").removeClass("ON");
-        $$("#TxtRecibidas").attr('src','recibidas.png');
-        $$("#Enviadas").addClass("ON");
-        $$("#TxtEnviadas").attr('src','enviadasON.png');
+    $$("#ContEnviadas").on('click', function() {
+        $$("#PageRecibidas").removeClass("visible").addClass("invisible");
+        $$("#PageEnviadas").removeClass("invisible").addClass("visible");
+        $$("#TxtEnviadas").removeClass("OFF");
+        $$("#Recibidas").attr('src','img/recibidasOFF.png');
+        $$("#TxtRecibidas").addClass("OFF");
+        $$("#Enviadas").attr('src','img/enviadasON.png');
         console.log("Remove class recibidas");
     })
-    $$("#Recibidas").on('click', function() {
-        $$("#Enviadas").removeClass("ON");
-        $$("#TxtEnviadas").attr('src','enviadas.png');
-        $$("#Recibidas").addClass("ON");
-        $$("#TxtRecibidas").attr('src','recibidasON.png');
+    $$("#ContRecibidas").on('click', function() {
+        $$("#PageEnviadas").removeClass("visible").addClass("invisible");
+        $$("#PageRecibidas").removeClass("invisible").addClass("visible");
+        console.log("Remove class enviadas");
+        $$("#TxtRecibidas").removeClass("OFF");
+        $$("#Enviadas").attr('src','img/enviadasOFF.png');
+        $$("#TxtEnviadas").addClass("OFF");
+        $$("#Recibidas").attr('src','img/recibidasON.png');
     })
 })
 

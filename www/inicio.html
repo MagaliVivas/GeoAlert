@@ -12,7 +12,7 @@
  
   <!---------------------------------->        
     <div class="page-content theme-dark">
-        <div id="PanelLateral" class="panel panel-right panel-right-1 panel-cover panel-resizable panel-init theme-dark">
+        <div id="PanelLateral" class="theme-dark panel panel-right panel-right-1 panel-cover panel-resizable panel-init">
       <div class="block theme-dark">
             <div class="list theme-dark">
                 <ul>
@@ -62,7 +62,7 @@
       </div>
     </div>
 
-
+    <div id="PageRecibidas" class="visible">
         <hr/>
         <p><h3>Recibidas</h3></p>
         <hr/>
@@ -82,6 +82,28 @@
                                 <p>xxxxxxxxxxxxxxxxxxx </p>
                                 <p>xxxxxxxxxxxxxxxxxxx </p>
         </div>
+        <div id="PageEnviadas" class="invisible">
+        <hr/>
+        <p><h3>Enviadas</h3></p>
+        <hr/>
+        <div class="block-title theme-dark"> 
+            <p>xxxxxxxxxxxxxxxxxxx </p>
+                                <p>xxxxxxxxxxxxxxxxxxx </p>
+                                <p>xxxxxxxxxxxxxxxxxxx </p>
+                                <p>xxxxxxxxxxxxxxxxxxx </p>
+                                <p>xxxxxxxxxxxxxxxxxxx </p>
+                                <p>xxxxxxxxxxxxxxxxxxx </p>
+                                <p>xxxxxxxxxxxxxxxxxxx </p>
+                                <p>xxxxxxxxxxxxxxxxxxx </p>
+                                <p>xxxxxxxxxxxxxxxxxxx </p>
+                                <p>xxxxxxxxxxxxxxxxxxx </p>
+                                <p>xxxxxxxxxxxxxxxxxxx </p>
+                                <p>xxxxxxxxxxxxxxxxxxx </p>
+                                <p>xxxxxxxxxxxxxxxxxxx </p>
+                                <p>xxxxxxxxxxxxxxxxxxx </p>
+                                <p>xxxxxxxxxxxxxxxxxxx </p>
+        </div>
+        </div>
         <div class="block block-strong theme-dark">
         <div class="fab-backdrop theme-dark"></div>
             <div class="fab fab-right-bottom theme-dark">
@@ -93,7 +115,7 @@
                 </a>
                 <div class="fab-buttons fab-buttons-top theme-dark">
                   <a id="CrearAlarma" class="fab-label-button theme-dark" href="#"><img src="img/NewAlarma.png"><span class="fab-label">Crear</span></a>
-                  <a class="fab-label-button theme-dark" href="#"><img src="img/group.png">><span class="fab-label">Grupos</span></a>
+                  <a class="fab-label-button theme-dark" href="#"><img src="img/group.png"><span class="fab-label">Grupos</span></a>
                   <a class="fab-label-button theme-dark" href="#"><img src="img/contacto.png"><span class="fab-label">Contactos</span></a>
                 </div>
             </div> 
@@ -102,8 +124,12 @@
     <!-- Toolbar -->
         <div class="toolbar toolbar-bottom theme-dark">
             <div class="toolbar-inner theme-dark">
-                        <a href="#" class="link theme-dark" id="Recibidas"><img src="img/recibidasON.png"><p id="TxtRecibidas" class="ON"> Recibidas</p></a>
-                        <a href="#" class="link theme-dark" id="Enviadas"><img src="img/enviadas.png"><p id="TxtEnviadas"> Enviadas</p></a>
+                <div >
+                        <a href="#" class="link theme-dark" id="ContRecibidas" ><img src="img/recibidasON.png" id="Recibidas"><p id="TxtRecibidas"> Recibidas</p></a>
+                    </div>
+                    <div class="col" >
+                        <a href="#" class="link theme-dark" id="ContEnviadas"><img src="img/enviadasOFF.png" id="Enviadas"><p id="TxtEnviadas" class="OFF"> Enviadas</p></a>
+                    </div>
             </div>
         </div>
 </div>
