@@ -109,7 +109,7 @@ platform = new H.service.Platform({
     longitud = -53.6;
     map = new H.Map( document.getElementById('mapContainer'), defaultLayers.vector.normal.map,
     {
-          zoom: 16,
+          zoom: 15,
           center: { lat: latitud, lng: longitud },
           volatility: true,
           pixelRatio: window.devicePixelRatio || 1
@@ -144,9 +144,8 @@ zoom.setAlignment('right-bottom');
 scalebar.setAlignment('bottom-left');
 
 var ExtGrupo = false;
-var ExtZona = false;
 $$("#BtnExtenderGrupo").on('click', function() {
-    if (ExtGrupo = false) {
+    if (ExtGrupo == false) {
         $$("#GrupoExt").removeClass("invisible").addClass("visible");
         ExtGrupo = true;
         console.log("deberia mostrar zona de grupos");
@@ -156,8 +155,9 @@ $$("#BtnExtenderGrupo").on('click', function() {
         console.log("deberia borrar zona de grupos");
     }
 })
+var ExtZona = false;
  $$("#BtnExtenderZona").on('click', function() {
-    if(ExtZona = false) {
+    if(ExtZona == false) {
     $$("#ZonaExt").removeClass("invisible").addClass("visible");
     console.log("deberia mostrar zonas");
     ExtZona = true;
