@@ -23,6 +23,7 @@ var app = new Framework7({
       { path: '/ayuda/', url: 'ayuda.html', },
       { path: '/ver-grupos/', url: 'ver-grupos.html', },
       { path: '/crear-grupo/', url: 'crear-grupo.html', },
+      { path: '/agregar-contacto/', url: 'agregar-contacto.html', },
     ]
     // ... other parameters
   });
@@ -109,6 +110,38 @@ $$(document).on('page:init', '.page[data-name="ver-grupos"]', function (e) {
 })
 
 
+
+$$(document).on('page:init', '.page[data-name="crear-grupo"]', function (e) {
+    // Do something here when page with data-name="about" attribute loaded and initialized
+    $$("#AgregarContactos").on('click', function() {
+        if ($$("#NombreGrupo").val() != "") {
+            NombreGrupo = $$("#NombreGrupo").val();
+            console.log("Nombre del grupo es "+NombreGrupo);
+            mainView.router.navigate("/agregar-contacto/");
+        } else {
+            app.dialog.alert("Complete todos los campos", "Atención");
+        }
+    })
+   /* IdGrupo=;
+    var grupo = {
+        nombre : NombreGrupo,
+    };
+    db.collection("Grupos").doc(IdGrupo).set(grupo);*/
+})
+
+$$(document).on('page:init', '.page[data-name="crear-grupo"]', function (e) {
+      var searchbar = app.searchbar.create({
+       /* el: '.searchbar',
+        searchContainer: '.list',
+        searchIn: '.item-title',*/
+        on: {
+          search(sb, query, previousQuery) {
+            console.log(query, previousQuery);
+           }
+        }
+    })
+})
+
 $$(document).on('page:init', '.page[data-name="crear-alarma"]', function (e) {
     console.log("Vista crear-alarma");
 
@@ -192,12 +225,7 @@ $$(document).on('page:init', '.page[data-name="inicio"]', function (e) {
  
     navigator.geolocation.getCurrentPosition(onSuccess, onError);
     // Do something here when page with data-name="about" attribute loaded and initialized
-    $$("VerGrupos").on('click', function(){
-        mainView.router.navigate('/ver-grupos/');
-    })
-    $$("#CrearGrupo").on('click', function() {
-        mainView.router.navigate('/crear-grupo/');
-    })
+
 
     $$("#CrearAlarma").on('click', function() {
         mainView.router.navigate('/crear-alarma/');
