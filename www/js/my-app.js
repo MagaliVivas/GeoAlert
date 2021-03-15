@@ -20,7 +20,9 @@ var app = new Framework7({
       { path: '/registro/', url: 'registro.html', },
       { path: '/inicio/', url: 'inicio.html', },
       { path: '/crear-alarma/', url: 'crear-alarma.html', },
-      { path: '/ayuda/', url: 'ayuda.html', }
+      { path: '/ayuda/', url: 'ayuda.html', },
+      { path: '/ver-grupos/', url: 'ver-grupos.html', },
+      { path: '/crear-grupo/', url: 'crear-grupo.html', },
     ]
     // ... other parameters
   });
@@ -31,6 +33,7 @@ var EmailUsuario ="";
 var PasswordUsuario="";
 var map, platform;
 var pos, latitud, longitud;
+var db = firebase.firestore();
 
 
 // Handle Cordova Device Ready Event
@@ -40,8 +43,9 @@ $$(document).on('deviceready', function() {
 
 $$(document).on('page:init', '.page[data-name="index"]', function (e) {
     console.log("Vista index");
+  $$("#MantenerSesion").on('click', function() {
     
- 
+  })
     $$("#BtnIngresar").on('click', function() {
         if(($$("#I-email").val() != "" )&& ($$("#I-password").val() != "")) {
             EmailUsuario = $$("#I-email").val();
@@ -97,74 +101,61 @@ $$(document).on('page:init', '.page[data-name="about"]', function (e) {
 })
 
 
+$$(document).on('page:init', '.page[data-name="ver-grupos"]', function (e) {
+    // Do something here when page with data-name="about" attribute loaded and initialized
+    $$("#NuevoGrupo").on('click', function() {
+        mainView.router.navigate('/crear-grupo/');
+    })
+})
+
 
 $$(document).on('page:init', '.page[data-name="crear-alarma"]', function (e) {
     console.log("Vista crear-alarma");
 
+    //------------------------------------------------------------
+latitud = -32;
+longitud = -60; 
 platform = new H.service.Platform({
     'apikey': 'hRXfUDJNgcg6ppmlxyXIhYk6Qaolj9bM5CzsJ8B_qi0'
    });
-        var defaultLayers = platform.createDefaultLayers();
-    latitud = -34.5;
-    longitud = -53.6;
-    map = new H.Map( document.getElementById('mapContainer'), defaultLayers.vector.normal.map,
-    {
-          zoom: 15,
-          center: { lat: latitud, lng: longitud },
-          volatility: true,
-          pixelRatio: window.devicePixelRatio || 1
-          });
-    coords = {lat: latitud, lng: longitud};
-    window.addEventListener('resize', () => map.getViewPort().resize());
+    var defaultLayers = platform.createDefaultLayers();  
+    // Instantiate (and display) a map object:
+    map = new H.Map(
+        document.getElementById('mapContainer'),
+        defaultLayers.vector.normal.map,
+        {
+        zoom: 14,
+        center: { lat: latitud, lng: longitud }
+        });
  
-// Centramos el mapa en las coordenadas de la marca
-map.setCenter(coords);
+        coords = {lat: latitud, lng: longitud};
+        marker = new H.map.Marker(coords);
  
-// Creamos una instancia de eventos de mapa:
-var mapEvents = new H.mapevents.MapEvents(map);
- 
-// Creamos un controlador de eventos para el mapa:
-map.addEventListener('tap', function(evt) {
-  // console.log(evt.type, evt.currentPointer.type);
-});
- 
-// Evento arrastrar
-var behavior = new H.mapevents.Behavior(mapEvents);
- 
-// Activamos la Interfaz de usuario 
-var ui = H.ui.UI.createDefault(map, defaultLayers, 'es-ES')
- 
-// Configuramos posicion de las opciones
-var mapSettings = ui.getControl('mapsettings');
-var zoom = ui.getControl('zoom');
-var scalebar = ui.getControl('scalebar');
- 
-mapSettings.setAlignment('top-right');
-zoom.setAlignment('right-bottom');
-scalebar.setAlignment('bottom-left');
-
-var ExtGrupo = false;
+        // Add the marker to the map and center the map at the location of the marker:
+        map.addObject(marker);
+        map.setCenter(coords);
+var ExtenderZona = false;
+$$("#BtnExtenderZona").on('click', function() {
+    if (ExtenderZona == false) {
+        $$("#ZonaExt").removeClass("invisible").addClass("visible");
+        ExtenderZona = true;
+        console.log("deberia mostrar zonas ");
+    } else {
+        $$("#ZonaExt").removeClass("visible").addClass("invisible");
+        ExtenderZona= false;
+        console.log("deberia borrar zonas");
+    }
+})
+var ExtenderGrupo = false;
 $$("#BtnExtenderGrupo").on('click', function() {
-    if (ExtGrupo == false) {
+    if (ExtenderGrupo == false) {
         $$("#GrupoExt").removeClass("invisible").addClass("visible");
-        ExtGrupo = true;
+        ExtenderGrupo = true;
         console.log("deberia mostrar zona de grupos");
     } else {
         $$("#GrupoExt").removeClass("visible").addClass("invisible");
-        ExtGrupo = false;
+        ExtenderGrupo = false;
         console.log("deberia borrar zona de grupos");
-    }
-})
-var ExtZona = false;
- $$("#BtnExtenderZona").on('click', function() {
-    if(ExtZona == false) {
-    $$("#ZonaExt").removeClass("invisible").addClass("visible");
-    console.log("deberia mostrar zonas");
-    ExtZona = true;
-    } else {
-        $$("#ZonaExt").removeClass("visible").addClass("invisible");
-        console.log("deberia borrar zonas");
-        ExtZona = false; 
     }
 })
 })
@@ -174,7 +165,39 @@ var ExtZona = false;
 
 
 $$(document).on('page:init', '.page[data-name="inicio"]', function (e) {
+         // onSuccess Callback
+    // This method accepts a Position object, which contains the
+    // current GPS coordinates
+    //
+    var onSuccess = function(position) {
+        latitudUsuario = position.coords.latitude;
+        longitudUsuario = position.coords.longitude;
+        console.log("La latitud es: " + latitudUsuario + " y la longitud: " + longitudUsuario);
+       /* alert('Latitude: '          + position.coords.latitude          + '\n' +
+              'Longitude: '         + position.coords.longitude         + '\n' +
+              'Altitude: '          + position.coords.altitude          + '\n' +
+              'Accuracy: '          + position.coords.accuracy          + '\n' +
+              'Altitude Accuracy: ' + position.coords.altitudeAccuracy  + '\n' +
+              'Heading: '           + position.coords.heading           + '\n' +
+              'Speed: '             + position.coords.speed             + '\n' +
+              'Timestamp: '         + position.timestamp                + '\n');*/
+    };
+ 
+    // onError Callback receives a PositionError object
+    //
+    function onError(error) {
+        alert('code: '    + error.code    + '\n' +
+              'message: ' + error.message + '\n');
+    }
+ 
+    navigator.geolocation.getCurrentPosition(onSuccess, onError);
     // Do something here when page with data-name="about" attribute loaded and initialized
+    $$("VerGrupos").on('click', function(){
+        mainView.router.navigate('/ver-grupos/');
+    })
+    $$("#CrearGrupo").on('click', function() {
+        mainView.router.navigate('/crear-grupo/');
+    })
 
     $$("#CrearAlarma").on('click', function() {
         mainView.router.navigate('/crear-alarma/');
@@ -186,8 +209,8 @@ $$(document).on('page:init', '.page[data-name="inicio"]', function (e) {
         mainView.router.navigate('/ayuda/');
     })
     $$("#ContEnviadas").on('click', function() {
-        $$("#PageRecibidas").removeClass("visible").addClass("invisible");
         $$("#PageEnviadas").removeClass("invisible").addClass("visible");
+        $$("#PageRecibidas").removeClass("visible").addClass("invisible");
         $$("#TxtEnviadas").removeClass("OFF");
         $$("#Recibidas").attr('src','img/recibidasOFF.png');
         $$("#TxtRecibidas").addClass("OFF");
@@ -221,6 +244,12 @@ var Password="";
         console.log("NombreUsuario es" + NombreUsuario);
         } 
     });
+    
+    email = Email;
+    var usuario = {
+        nombre : NombreUsuario
+    };
+    db.collection("Usuarios").doc(email).set(usuario);
 })
 
 
