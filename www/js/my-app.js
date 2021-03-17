@@ -32,6 +32,8 @@ var mainView = app.views.create('.view-main');
 var NombreUsuario = "";
 var EmailUsuario ="";
 var PasswordUsuario="";
+var ValorRango=0;
+var latitudUsuario,longitudUsuario;
 var map, platform;
 var pos, latitud, longitud;
 var db = firebase.firestore();
@@ -127,9 +129,6 @@ $$(document).on('page:init', '.page[data-name="crear-grupo"]', function (e) {
         nombre : NombreGrupo,
     };
     db.collection("Grupos").doc(IdGrupo).set(grupo);*/
-})
-
-$$(document).on('page:init', '.page[data-name="crear-grupo"]', function (e) {
       var searchbar = app.searchbar.create({
        /* el: '.searchbar',
         searchContainer: '.list',
@@ -146,10 +145,10 @@ $$(document).on('page:init', '.page[data-name="crear-alarma"]', function (e) {
     console.log("Vista crear-alarma");
 
     //------------------------------------------------------------
-latitud = -32;
-longitud = -60; 
+latitud = latitudUsuario;
+longitud = longitudUsuario;
 platform = new H.service.Platform({
-    'apikey': 'hRXfUDJNgcg6ppmlxyXIhYk6Qaolj9bM5CzsJ8B_qi0'
+    'apikey': 'ZHfZ_YQ-I1kSqKnmpWU7TMZQk5Vcuhv6CVvoawrGSwY'
    });
     var defaultLayers = platform.createDefaultLayers();  
     // Instantiate (and display) a map object:
@@ -157,8 +156,11 @@ platform = new H.service.Platform({
         document.getElementById('mapContainer'),
         defaultLayers.vector.normal.map,
         {
-        zoom: 14,
-        center: { lat: latitud, lng: longitud }
+        zoom: 13,
+        center: { lat: latitud, lng: longitud },
+        volatility: true,
+        pixelRatio: window.devicePixelRatio || 1
+
         });
  
         coords = {lat: latitud, lng: longitud};
@@ -191,6 +193,10 @@ $$("#BtnExtenderGrupo").on('click', function() {
         console.log("deberia borrar zona de grupos");
     }
 })
+    //$$("ValueRango").on('click', function() {
+    //ValorRango = app.range.getValue("#ValueRango");
+    //Sconsole.log("el valor elegido para el rango es " + ValorRango);
+//})
 })
 
 

@@ -17,6 +17,28 @@
                     <textarea placeholder="Redactar alerta"></textarea>
             </div>
 
+
+
+
+                    <div class="block block-strong" >
+                        <div
+                          class="range-slider range-slider-init" id="ValueRango"
+                          data-min="0"
+                          data-max="200"
+                          data-label="true"
+                          data-step="1"
+                          data-value="25"
+                          data-scale="true"
+                          data-scale-steps="5"
+                          data-scale-sub-steps="4"
+                        ></div>
+                      </div>
+
+
+
+
+
+
             <li>
               <span>Grupo</span>
               <label class="toggle toggle-init color-green">
@@ -32,7 +54,6 @@
               </label>
             </li>
         </div>
- <div class="mapaDir2" style="width: 91vw; height: 66vh; border:2px solid #000;" id="mapContainer"></div>
             <div id="GrupoExt" class="invisible">
                 <div class="block-title theme-dark">Elegir grupo:</div>
                     <div class="list">
@@ -67,12 +88,15 @@
                         </ul>
                     </div>
             </div>
+                <div id="ZonaExt" class="invisible">
+                    <p>Entre en zona alarma extendida</p>
+                   <!--ACA VA EL MAPA -->
+                    <div class="mapaDir2" style="width: 81vw; height: 56vh; border:2px solid #00FF80;" id="mapContainer"></div>
+                    
+                </div>
         </div>
 
 
-        <div id="ZonaExt" class="invisible">
-            <p>Entre en zona alarma extendida</p>
-           <!--ACA VA EL MAPA -->
-        </div>
+        
     </div>
 </div>
