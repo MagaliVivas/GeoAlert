@@ -182,24 +182,43 @@ $$(document).on('page:init', '.page[data-name="crear-alerta"]', function (e) {
         }
     })
     $$("#BtnEnviarAlerta").on('click', function() {
-        Titulo = $$("#TituloAlerta").val();
-        console.log("El titulo es " + Titulo);
-        Contenido = $$("#ContenidoAlerta").val();
-        console.log("El contenido es " + Contenido);
-        Destinatario = $$("#DestinatarioAlerta").val();
-        console.log("El Destinatario es " + Destinatario)
-        const timestamp = Date.now(); 
-        const Fecha = new Date(timestamp);
-        console.log(Fecha);
-        Creador = EmailActivo; 
-        db.collection('Alerta').add({
-            Titulo,
-            Contenido,
-            Fecha,
-            Creador,
-            Destinatario
-        })
+        if(($$("#TituloAlerta").val() != "") && ($$("#ContenidoAlerta").val() != "")) {
+            Titulo = $$("#TituloAlerta").val();
+            console.log("El titulo es " + Titulo);
+            Contenido = $$("#ContenidoAlerta").val();
+            console.log("El contenido es " + Contenido);
+            Destinatario = $$("#DestinatarioAlerta").val();
+            console.log("El Destinatario es " + Destinatario)
+            const timestamp = Date.now(); 
+            const Fecha = new Date(timestamp);
+            console.log(Fecha);
+            Creador = EmailActivo; 
+            db.collection('Alerta').add({
+                Titulo,
+                Contenido,
+                Fecha,
+                Creador,
+                Destinatario
+            })
+        } else {
+            app.dialog.alert("Complete todos los campos", "Atención");
+        }
     })
+    var Valor = 0;
+    if (ExtenderZona == true) {
+        var UbicacionRef = db.collection("Ubicacion");
+        var query = UbicacionRef.get()
+        .onSnapshot((querySnapchot) =>{
+            querySnapchot.forEach((doc) => {
+                console.log(doc.id, " => ", doc.data());
+                LatitudBD = data.doc().Latitud;
+                LongitudBD = data.doc().Longitud;
+               
+            });
+        })   
+        var Valor= $$("#NroRangoAEnviar").val();
+        Calculardistancia(LatitudBD, LongitudBD)
+    }
 })
 
 
@@ -212,10 +231,14 @@ $$(document).on('page:init', '.page[data-name="inicio"]', function (e) {
     // current GPS coordinates
     //
     var onSuccess = function(position) {
-        latitud = position.coords.latitude;
-        longitud = position.coords.longitude;                   
+        latitudUser = position.coords.latitude;
+        longitudUser = position.coords.longitude;                   
+        db.collection('Ubicacion').doc(EmailActivo).set({
+            Latitud : latitudUser,
+            Longitud : longitudUser
+        })
 
-        console.log("La latitud es: " + latitud + " y la longitud: " + longitud);
+        console.log("La latitud es: " + latitudUser + " y la longitud: " + longitudUser);
 
 
         platform = new H.service.Platform({
@@ -231,7 +254,7 @@ $$(document).on('page:init', '.page[data-name="inicio"]', function (e) {
             defaultLayers.vector.normal.map,
             {
                 zoom: 14,
-                center: { lat: latitud, lng: longitud }
+                center: { lat: latitudUser, lng: longitudUser }
             });
             coords = {lat: latitud, lng: longitud};
             marker = new H.map.Marker(coords);
@@ -280,7 +303,7 @@ $$(document).on('page:init', '.page[data-name="inicio"]', function (e) {
         $$("#Enviadas").attr('src','img/enviadasON.png');
         console.log("Remove class recibidas");
         var EnviadasRef = db.collection("Alerta");
-        var query = EnviadasRef.where("Creador", "==", EmailActivo).get()
+        var query = EnviadasRef.where("Creador", "==", EmailActivo)
         .onSnapshot((querySnapchot) =>{
             querySnapchot.forEach((doc) => {
                 console.log(doc.id, " => ", doc.data());
@@ -303,7 +326,7 @@ $$(document).on('page:init', '.page[data-name="inicio"]', function (e) {
         $$("#TxtEnviadas").addClass("OFF");
         $$("#Recibidas").attr('src','img/recibidasON.png');
         var RecibidasRef = db.collection("Alerta");
-        var query = RecibidasRef.where("Destinatario", "==", EmailActivo).get()
+        var query = RecibidasRef.where("Destinatario", "==", EmailActivo)
         .onSnapshot((querySnapchot) =>{
             querySnapchot.forEach((doc) => {
                 console.log(doc.id, " => ", doc.data());
@@ -389,3 +412,13 @@ function CrearUsuario(varEmail,varPassword) {
             console.log(error);
         });
 }
+
+ function Calculardistancia(latitud2, longitud2){
+    console.log("Entre a funcion Calculardistancia");
+    // Usamos la API de google para medir la distancia entre 2 puntos
+    var ubi1 = new google.maps.LatLng(latitudUser, longitudUser);
+    var ubi2 = new google.maps.LatLng(latitud2, longitud2)
+    var distance = google.maps.geometry.spherical.computeDistanceBetween(ubi1, ubi2);
+    // distancia en metros
+    console.log(((distance).toFixed(2) + ' metros'));
+    return ((distance).toFixed(2)) }
