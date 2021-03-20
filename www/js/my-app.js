@@ -150,13 +150,23 @@ $$(document).on('page:init', '.page[data-name="crear-alerta"]', function (e) {
         if (ExtenderZona == false) {
             $$("#ZonaExt").removeClass("invisible").addClass("visible");
             ExtenderZona = true;
-            EnvioA = "Zona";
             console.log("deberia mostrar zonas ");
         } else {
             $$("#ZonaExt").removeClass("visible").addClass("invisible");
-            EnvioA="";
             ExtenderZona= false;
             console.log("deberia borrar zonas");
+        }
+    })
+    var ExtenderDest = false;
+    $$("#BtnExtenderUsuario").on('click', function() {
+        if (ExtenderDest == false) {
+            $$("#UsuarioExt").removeClass("invisible").addClass("visible");
+            ExtenderDest = true;
+            console.log("deberia mostrar usuarios ");
+        } else {
+            $$("#UsuarioExt").removeClass("visible").addClass("invisible");
+            ExtenderDest= false;
+            console.log("deberia borrar usuarios");
         }
     })
     var ExtenderGrupo = false;
@@ -164,12 +174,10 @@ $$(document).on('page:init', '.page[data-name="crear-alerta"]', function (e) {
         if (ExtenderGrupo == false) {
             $$("#GrupoExt").removeClass("invisible").addClass("visible");
             ExtenderGrupo = true;
-            EnvioA = "Grupo";
             console.log("deberia mostrar zona de grupos");
         } else {
             $$("#GrupoExt").removeClass("visible").addClass("invisible");
             ExtenderGrupo = false;
-            EnvioA = "";
             console.log("deberia borrar zona de grupos");
         }
     })
@@ -178,6 +186,8 @@ $$(document).on('page:init', '.page[data-name="crear-alerta"]', function (e) {
         console.log("El titulo es " + Titulo);
         Contenido = $$("#ContenidoAlerta").val();
         console.log("El contenido es " + Contenido);
+        Destinatario = $$("#DestinatarioAlerta").val();
+        console.log("El Destinatario es " + Destinatario)
         const timestamp = Date.now(); 
         const Fecha = new Date(timestamp);
         console.log(Fecha);
@@ -186,7 +196,8 @@ $$(document).on('page:init', '.page[data-name="crear-alerta"]', function (e) {
             Titulo,
             Contenido,
             Fecha,
-            Creador
+            Creador,
+            Destinatario
         })
     })
 })
@@ -203,7 +214,7 @@ $$(document).on('page:init', '.page[data-name="inicio"]', function (e) {
     var onSuccess = function(position) {
         latitud = position.coords.latitude;
         longitud = position.coords.longitude;                   
-        
+
         console.log("La latitud es: " + latitud + " y la longitud: " + longitud);
 
 
@@ -268,6 +279,20 @@ $$(document).on('page:init', '.page[data-name="inicio"]', function (e) {
         $$("#TxtRecibidas").addClass("OFF");
         $$("#Enviadas").attr('src','img/enviadasON.png');
         console.log("Remove class recibidas");
+        var EnviadasRef = db.collection("Alerta");
+        var query = EnviadasRef.where("Creador", "==", EmailActivo).get()
+        .onSnapshot((querySnapchot) =>{
+            querySnapchot.forEach((doc) => {
+                console.log(doc.id, " => ", doc.data());
+                TituloEnv=doc.data().Titulo;
+                ContenidoEnv =doc.data().Contenido;
+                $$("#AlertasEnviadas2").append(`<div id="AlertasEnviadas" class="block-title theme-dark">
+                    <p>
+                    <h3>` + TituloEnv +`</h3></p> <p>`+ContenidoEnv+`</p>
+                    </div>
+                    `);
+        });
+    })
     })
     $$("#ContRecibidas").on('click', function() {
         $$("#PageEnviadas").removeClass("visible").addClass("invisible");
@@ -277,7 +302,38 @@ $$(document).on('page:init', '.page[data-name="inicio"]', function (e) {
         $$("#Enviadas").attr('src','img/enviadasOFF.png');
         $$("#TxtEnviadas").addClass("OFF");
         $$("#Recibidas").attr('src','img/recibidasON.png');
+        var RecibidasRef = db.collection("Alerta");
+        var query = RecibidasRef.where("Destinatario", "==", EmailActivo).get()
+        .onSnapshot((querySnapchot) =>{
+            querySnapchot.forEach((doc) => {
+                console.log(doc.id, " => ", doc.data());
+                TituloRec=doc.data().Titulo;
+                ContenidoRec =doc.data().Contenido;
+                $$("#AlertasRecibidas2").append(`<div id="AlertasRecibidas" class="block-title theme-dark">
+                    <p>
+                    <h3>` + TituloRec +`</h3></p> <p>`+ContenidoRec+`</p>
+                    </div>
+                    `);
+        });
+    })    })
+
+    //-----------------------------------------
+    console.log("El email activo es " + EmailActivo);
+    var RecibidasRef = db.collection("Alerta");
+    var query = RecibidasRef.where("Destinatario", "==", EmailActivo)
+    .onSnapshot((querySnapchot) =>{
+        querySnapchot.forEach((doc) => {
+            console.log(doc.id, " => ", doc.data());
+            TituloRec=doc.data().Titulo;
+            ContenidoRec =doc.data().Contenido;
+            $$("#AlertasRecibidas2").append(`<div id="AlertasRecibidas" class="block-title theme-dark">
+                <p>
+                <h3>` + TituloRec +`</h3></p> <p>`+ContenidoRec+`</p>
+                </div>
+                `);
+        });
     })
+
 })
 
 $$(document).on('page:init', '.page[data-name="registro"]', function (e) {
