@@ -14,6 +14,10 @@
 .title {
   text-shadow: #00FF80;
 }
+
+<input> {
+  width: 95vh;
+}
 @font-face {
   font-family: 'Poppins';
   font-style: normal;

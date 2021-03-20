@@ -19,7 +19,7 @@ var app = new Framework7({
       { path: '/about/', url: 'about.html', },
       { path: '/registro/', url: 'registro.html', },
       { path: '/inicio/', url: 'inicio.html', },
-      { path: '/crear-alarma/', url: 'crear-alarma.html', },
+      { path: '/crear-alerta/', url: 'crear-alerta.html', },
       { path: '/ayuda/', url: 'ayuda.html', },
       { path: '/ver-grupos/', url: 'ver-grupos.html', },
       { path: '/crear-grupo/', url: 'crear-grupo.html', },
@@ -37,7 +37,7 @@ var latitudUsuario,longitudUsuario;
 var map, platform;
 var pos, latitud, longitud;
 var db = firebase.firestore();
-
+var Email, Titulo, Contenido, Creador;
 
 // Handle Cordova Device Ready Event
 $$(document).on('deviceready', function() {
@@ -56,6 +56,7 @@ $$(document).on('page:init', '.page[data-name="index"]', function (e) {
             /*console.log("El email es: " + EmailUsuario + "Y la contraseña es " + PasswordUsuario);*/
                 firebase.auth().signInWithEmailAndPassword(EmailUsuario, PasswordUsuario)
                     .then((user) => {
+                        EmailActivo = EmailUsuario;
                         mainView.router.navigate('/inicio/');
                       })
                       .catch((error) => {
@@ -141,62 +142,53 @@ $$(document).on('page:init', '.page[data-name="crear-grupo"]', function (e) {
     })
 })
 
-$$(document).on('page:init', '.page[data-name="crear-alarma"]', function (e) {
-    console.log("Vista crear-alarma");
-
-    //------------------------------------------------------------
-latitud = latitudUsuario;
-longitud = longitudUsuario;
-platform = new H.service.Platform({
-    'apikey': 'ZHfZ_YQ-I1kSqKnmpWU7TMZQk5Vcuhv6CVvoawrGSwY'
-   });
-    var defaultLayers = platform.createDefaultLayers();  
-    // Instantiate (and display) a map object:
-    map = new H.Map(
-        document.getElementById('mapContainer'),
-        defaultLayers.vector.normal.map,
-        {
-        zoom: 13,
-        center: { lat: latitud, lng: longitud },
-        volatility: true,
-        pixelRatio: window.devicePixelRatio || 1
-
-        });
- 
-        coords = {lat: latitud, lng: longitud};
-        marker = new H.map.Marker(coords);
- 
-        // Add the marker to the map and center the map at the location of the marker:
-        map.addObject(marker);
-        map.setCenter(coords);
-var ExtenderZona = false;
-$$("#BtnExtenderZona").on('click', function() {
-    if (ExtenderZona == false) {
-        $$("#ZonaExt").removeClass("invisible").addClass("visible");
-        ExtenderZona = true;
-        console.log("deberia mostrar zonas ");
-    } else {
-        $$("#ZonaExt").removeClass("visible").addClass("invisible");
-        ExtenderZona= false;
-        console.log("deberia borrar zonas");
-    }
-})
-var ExtenderGrupo = false;
-$$("#BtnExtenderGrupo").on('click', function() {
-    if (ExtenderGrupo == false) {
-        $$("#GrupoExt").removeClass("invisible").addClass("visible");
-        ExtenderGrupo = true;
-        console.log("deberia mostrar zona de grupos");
-    } else {
-        $$("#GrupoExt").removeClass("visible").addClass("invisible");
-        ExtenderGrupo = false;
-        console.log("deberia borrar zona de grupos");
-    }
-})
-    //$$("ValueRango").on('click', function() {
-    //ValorRango = app.range.getValue("#ValueRango");
-    //Sconsole.log("el valor elegido para el rango es " + ValorRango);
-//})
+$$(document).on('page:init', '.page[data-name="crear-alerta"]', function (e) {
+    var EnvioA= "";
+    console.log("Vista crear-alerta");
+    var ExtenderZona = false;
+    $$("#BtnExtenderZona").on('click', function() {
+        if (ExtenderZona == false) {
+            $$("#ZonaExt").removeClass("invisible").addClass("visible");
+            ExtenderZona = true;
+            EnvioA = "Zona";
+            console.log("deberia mostrar zonas ");
+        } else {
+            $$("#ZonaExt").removeClass("visible").addClass("invisible");
+            EnvioA="";
+            ExtenderZona= false;
+            console.log("deberia borrar zonas");
+        }
+    })
+    var ExtenderGrupo = false;
+    $$("#BtnExtenderGrupo").on('click', function() {
+        if (ExtenderGrupo == false) {
+            $$("#GrupoExt").removeClass("invisible").addClass("visible");
+            ExtenderGrupo = true;
+            EnvioA = "Grupo";
+            console.log("deberia mostrar zona de grupos");
+        } else {
+            $$("#GrupoExt").removeClass("visible").addClass("invisible");
+            ExtenderGrupo = false;
+            EnvioA = "";
+            console.log("deberia borrar zona de grupos");
+        }
+    })
+    $$("#BtnEnviarAlerta").on('click', function() {
+        Titulo = $$("#TituloAlerta").val();
+        console.log("El titulo es " + Titulo);
+        Contenido = $$("#ContenidoAlerta").val();
+        console.log("El contenido es " + Contenido);
+        const timestamp = Date.now(); 
+        const Fecha = new Date(timestamp);
+        console.log(Fecha);
+        Creador = EmailActivo; 
+        db.collection('Alerta').add({
+            Titulo,
+            Contenido,
+            Fecha,
+            Creador
+        })
+    })
 })
 
 
@@ -209,9 +201,35 @@ $$(document).on('page:init', '.page[data-name="inicio"]', function (e) {
     // current GPS coordinates
     //
     var onSuccess = function(position) {
-        latitudUsuario = position.coords.latitude;
-        longitudUsuario = position.coords.longitude;
-        console.log("La latitud es: " + latitudUsuario + " y la longitud: " + longitudUsuario);
+        latitud = position.coords.latitude;
+        longitud = position.coords.longitude;                   
+        
+        console.log("La latitud es: " + latitud + " y la longitud: " + longitud);
+
+
+        platform = new H.service.Platform({
+            'apikey': 'ZHfZ_YQ-I1kSqKnmpWU7TMZQk5Vcuhv6CVvoawrGSwY'
+        });
+        var defaultLayers = platform.createDefaultLayers();
+ 
+ 
+ 
+        // Instantiate (and display) a map object:
+        map = new H.Map(
+            document.getElementById('mapContainer'),
+            defaultLayers.vector.normal.map,
+            {
+                zoom: 14,
+                center: { lat: latitud, lng: longitud }
+            });
+            coords = {lat: latitud, lng: longitud};
+            marker = new H.map.Marker(coords);
+            // Add the marker to the map and center the map at the location of the marker:
+            map.addObject(marker);
+            map.setCenter(coords);
+
+
+
        /* alert('Latitude: '          + position.coords.latitude          + '\n' +
               'Longitude: '         + position.coords.longitude         + '\n' +
               'Altitude: '          + position.coords.altitude          + '\n' +
@@ -233,8 +251,8 @@ $$(document).on('page:init', '.page[data-name="inicio"]', function (e) {
     // Do something here when page with data-name="about" attribute loaded and initialized
 
 
-    $$("#CrearAlarma").on('click', function() {
-        mainView.router.navigate('/crear-alarma/');
+    $$("#CrearAlerta").on('click', function() {
+        mainView.router.navigate('/crear-alerta/');
     })
     $$("#BtnAyuda").on('click', function() {
         $$("#PanelLateral").on('open', function () {
@@ -270,51 +288,36 @@ var Password="";
         if ($$("#R-password1").val() != $$("#R-password2").val()) {
             app.dialog.alert("Las contraseñas no coinciden", "Atención");
         } else {
-            Email= $$("#R-email").val();
-            Password= $$("#R-password1").val();
-            console.log("La contraseña es " + Password + "Y el mail es " + Email);
-            CrearUsuario(Email,Password);
-        NombreUsuario = $$("#I-email").val();
-        console.log("NombreUsuario es" + NombreUsuario);
-        } 
+            if (($$("#R-nombre").val() != "") && ($$("#R-email").val() != "") && ($$("#R-password1").val() != "") ) {
+                Email= $$("#R-email").val();
+                Password= $$("#R-password1").val();
+                NombreUsuario = $$("#R-nombre").val();
+                console.log("La contraseña es " + Password + "el mail es " + Email + "y el nombre es " + NombreUsuario);
+                CrearUsuario(Email,Password);    
+                //var usuario = {
+                   // nombre : NombreUsuario
+                //};
+                //db.collection("Usuarios").doc(Email).set(usuario);
+            
+                 db.collection('Usuarios').doc(Email).set({
+                nombre : NombreUsuario
+                })
+
+            }
+        }
+        EmailActivo = Email; 
     });
-    
-    email = Email;
-    var usuario = {
-        nombre : NombreUsuario
-    };
-    db.collection("Usuarios").doc(email).set(usuario);
 })
 
 
 function CrearUsuario(varEmail,varPassword) {
-    var registro = true;
-    console.log("Hola");
-    console.log("el valor de la variable inicio booleana es " + registro);
+    console.log("Entre en crear usuario");
     firebase.auth().createUserWithEmailAndPassword(varEmail, varPassword)
         .then(function(){
-             if (registro == true) {
-                console.log("entré al if de crear usuario");
-                  firebase.auth().onAuthStateChanged(function(user) {
-                    console.log("user.displayName: " + user.displayName);
-                    user
-                    .updateProfile({ 
-                      displayName: NombreUsuario,
-                    })
-                    .then(function(){
-                      console.log("user.displayName: " + user.displayName);
-                      user.sendEmailVerification();
-                    });
-                  });
-
-                  app.dialog.alert("Verifique su email. Compruebe su casilla de correos","Atención");
-
-                mainView.router.navigate('/inicio/');
-            }
-        console.log("el valor de la variable verdadero booleana es " + registro);
+            console.log("Usuario creado");
+            mainView.router.navigate('/inicio/');
         } )
         .catch(function(error) {
-            registro= false;
             // Handle Errors here.
             var errorCode = error.code;
             var errorMessage = error.message;
@@ -328,6 +331,5 @@ function CrearUsuario(varEmail,varPassword) {
                 }
             }
             console.log(error);
-            console.log("el valor de la variable booleana false es " + registro);
         });
 }

@@ -1,4 +1,4 @@
-<div class="page theme-dark" data-name="crear-alarma">
+<div class="page theme-dark" data-name="crear-alerta">
     <div class="navbar theme-dark">
         <div class="navbar-inner sliding theme-dark">
             <div class="left theme-dark">
@@ -7,38 +7,15 @@
                 <span class="ios-only theme-dark">Back</span>
                 </a>
             </div>
-            <div class="title theme-dark">Nueva Alarma</div>
+            <div class="title theme-dark">Nueva Alerta</div>
         </div>
     </div>
     <div class="page-content theme-dark">
         <div class="block block-strong theme-dark">
-            <div><input type="text" placeholder="Titulo" /></div>
+            <div><input id="TituloAlerta" type="text" placeholder="Titulo" /></div>
             <div class="item-input-wrap theme-dark">
-                    <textarea placeholder="Redactar alerta"></textarea>
+                    <textarea id="ContenidoAlerta" placeholder="Redactar alerta"></textarea>
             </div>
-
-
-
-
-                    <div class="block block-strong" >
-                        <div
-                          class="range-slider range-slider-init" id="ValueRango"
-                          data-min="0"
-                          data-max="200"
-                          data-label="true"
-                          data-step="1"
-                          data-value="25"
-                          data-scale="true"
-                          data-scale-steps="5"
-                          data-scale-sub-steps="4"
-                        ></div>
-                      </div>
-
-
-
-
-
-
             <li>
               <span>Grupo</span>
               <label class="toggle toggle-init color-green">
@@ -88,15 +65,32 @@
                         </ul>
                     </div>
             </div>
+
+
+
+
+            
                 <div id="ZonaExt" class="invisible">
-                    <p>Entre en zona alarma extendida</p>
-                   <!--ACA VA EL MAPA -->
+                    <div class="item-content item-input theme-dark">
+                            <div class="item-inner theme-dark">
+                                <div class="item-title item-label theme-dark">Rango de zona a enviar (en metros):</div>
+                                <div class="item-input-wrap theme-dark">
+                                    <input type="number" id="I-password" name="NroRango" placeholder="Ingrese el numero" />
+                                </div>
+                            </div>
+                        </div>   
+
+
+
+
                     <div class="mapaDir2" style="width: 81vw; height: 56vh; border:2px solid #00FF80;" id="mapContainer"></div>
+                    <p>Entre en zona alerta extendida</p>
+                   <!--ACA VA EL MAPA -->
+                    
                     
                 </div>
+                <a href="#" id="BtnEnviarAlerta" class="list-button">ENVIAR</a>
         </div>
-
-
         
     </div>
 </div>
