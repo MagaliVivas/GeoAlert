@@ -1,87 +1,83 @@
 <div class="page theme-dark" data-name="inicio">
-<div class="navbar theme-dark">
-    <div class="navbar-inner sliding  theme-dark">
-    <div class="left"><a href="busqueda.html" class="rigth theme-dark col-25"><img src="img/search.png"/></a></div>
-        <div class="title">GeoAlert</div>
-        <div ><a href="#" id="AbrirPanel" class="button button-fill theme-dark panel-open col-25" data-panel=".panel-right-1"><img src="img/menu.png"/></a></div>
-
-
-
-</div>
-</div>
+    <div class="navbar theme-dark">
+        <div class="navbar-inner sliding  theme-dark">
+            <div><a href="busqueda.html" class="rigth theme-dark "><img src="img/search.png"/></a></div>
+            <div class="title"><div class="col-50">GeoAlert</div></div>
+            <div id="IconoPanel"><a href="#" id="AbrirPanel" class="button button-fill theme-dark panel-open " data-panel=".panel-right-1"><img src="img/menu.png"/></a></div>
+        </div>
+    </div>
  
   <!---------------------------------->        
     <div class="page-content theme-dark">
         <div id="PanelLateral" class="theme-dark panel panel-right panel-right-1 panel-cover panel-resizable panel-init">
-      <div class="block theme-dark">
-            <div class="list theme-dark">
-                <ul>
-                    <li class="accordion-item theme-dark"><a class="item-content item-link theme-dark" href="#">
-                        <div class="item-inner theme-dark">
-                            <div class="item-title theme-dark">Cuenta</div>
-                        </div>
-                    </a>
+            <div class="block theme-dark">
+                <div class="list theme-dark">
+                    <ul>
+                        <li class="accordion-item theme-dark">
+                            <a class="item-content item-link theme-dark" href="#">
+                                <div class="item-inner theme-dark">
+                                    <div class="item-title theme-dark">Cuenta</div>
+                                </div>
+                            </a>
                         <div class="accordion-item-content theme-dark">
                             <div class="block theme-dark">
                                 <p>Administrar cuenta</p>
                                 <p>Cerrar sesión</p>
                             </div>
                         </div>
-                    </li>
-                    <li class="accordion-item theme-dark"><a class="item-content item-link" href="#">
-                        <div class="item-inner theme-dark">
-                            <div class="item-title theme-dark">Grupos</div>
-                        </div>
-                    </a>
+                        </li>
+                        <li class="accordion-item theme-dark">
+                            <a class="item-content item-link" href="#">
+                                <div class="item-inner theme-dark">
+                                    <div class="item-title theme-dark">Grupos</div>
+                                </div>
+                            </a>
                         <div class="accordion-item-content theme-dark">
                             <div class="block theme-dark">
-                                <a href="/crear-grupo/" id="CrearGrupos" class="panel-close theme-dark">Crear grupo</p>
-                                <a href="/ver-grupos/" id="VerGrupos" class="panel-close theme-dark">Ver grupos</p>
+                                <a href="/crear-grupo/" id="CrearGrupos" class="panel-close theme-dark">Crear grupo</p></a>
+                                <a href="/ver-grupos/" id="VerGrupos" class="panel-close theme-dark">Ver grupos</p></a>
                             </div>
                         </div>
-                    </li>
-                    <li class="accordion-item theme-dark"><a class="item-content theme-dark item-link" href="#">
-                        <div class="item-inner theme-dark">
-                            <div class="item-title theme-dark">Contactos</div>
-                        </div>
-                    </a>
+                        </li>
+                        <li class="accordion-item theme-dark">
+                            <a class="item-content theme-dark item-link" href="#">
+                                <div class="item-inner theme-dark">
+                                    <div class="item-title theme-dark">Contactos</div>
+                                </div>
+                            </a>
                         <div class="accordion-item-content theme-dark">
                             <div class="block">
                                 <p><a href="/crear-contactos/" class="panel-close theme-dark">Agregar contacto</a></p>
                                 <p><a href="/ver-grupos/" class="panel-close theme-dark">Ver contactos</a></p>
                             </div>
                         </div>
-                    </li>
-                </ul>
+                        </li>
+                    </ul>
+                </div>
+                <p><a href="#" id="BtnAyuda" class="panel-close">Ayuda</a></p>
+                <p><a class="panel-close" href="#">Cerrar</a></p>
             </div>
-
-        <p><a href="#" id="BtnAyuda" class="panel-close">Ayuda</a></p>
-        <p><a class="panel-close" href="#">Cerrar</a></p>
-      </div>
-    </div>
-
-    <div id="PageRecibidas" class="visible">
-        <hr/>
-        <p><h3>Recibidas</h3></p>
-        <hr/>
-        <div id="AlertasRecibidas2">
-            <div id="AlertasRecibidas" class="block-title theme-dark"> </div>
         </div>
-    </div>
-    <div id="PageEnviadas" class="invisible">
-        <hr/>
-        <p><h3>Enviadas</h3></p>
-        <hr/>
-        <div id="AlertasEnviadas2">
-            <div id="AlertasEnviadas" class="block-title theme-dark"> </div>
+        <div id="PageRecibidas" class="visible">
+            <hr/>
+            <p><h3>Recibidas</h3></p>
+            <hr/>
+            <div id="AlertasRecibidas2">
+                <div id="AlertasRecibidas" class="block-title theme-dark"> </div>
+            </div>
         </div>
-    </div>
+        <div id="PageEnviadas" class="invisible">
+            <hr/>
+            <p><h3>Enviadas</h3></p>
+            <hr/>
+            <div id="AlertasEnviadas2">
+                <div id="AlertasEnviadas" class="block-title theme-dark"> </div>
+            </div>
+        </div>
         <div class="block block-strong theme-dark">
         <div class="fab-backdrop theme-dark"></div>
             <div class="fab fab-right-bottom theme-dark">
                 <a href="#">
-                  <!--<i class="icon f7-icons if-not-md">plus</i>
-                  <i class="icon f7-icons if-not-md">xmark</i>-->
                   <i class="icon material-icons md-only">add</i>
                   <i class="icon material-icons md-only">close</i>
                 </a>
@@ -96,10 +92,10 @@
     <!-- Toolbar -->
         <div class="toolbar toolbar-bottom theme-dark">
             <div class="toolbar-inner theme-dark">
-                <div >
-                        <a href="#" class="link theme-dark" id="ContRecibidas" ><img src="img/recibidasON.png" id="Recibidas"><p id="TxtRecibidas"> Recibidas</p></a>
-                    </div>
-                    <div class="col" >
+                <div>
+                    <a href="#" class="link theme-dark" id="ContRecibidas" ><img src="img/recibidasON.png" id="Recibidas"><p id="TxtRecibidas"> Recibidas</p></a>
+                </div>
+                    <div class="col">
                         <a href="#" class="link theme-dark" id="ContEnviadas"><img src="img/enviadasOFF.png" id="Enviadas"><p id="TxtEnviadas" class="OFF"> Enviadas</p></a>
                     </div>
             </div>

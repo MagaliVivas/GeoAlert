@@ -256,7 +256,7 @@ $$(document).on('page:init', '.page[data-name="inicio"]', function (e) {
                 zoom: 14,
                 center: { lat: latitudUser, lng: longitudUser }
             });
-            coords = {lat: latitud, lng: longitud};
+            coords = {lat: latitudUser, lng: longitudUser};
             marker = new H.map.Marker(coords);
             // Add the marker to the map and center the map at the location of the marker:
             map.addObject(marker);

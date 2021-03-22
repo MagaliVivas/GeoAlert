@@ -15,9 +15,14 @@
   text-shadow: #00FF80;
 }
 
-<input> {
-  width: 95vh;
+#ContenidoAlerta {
+  width: -webkit-fill-available;
 }
+
+input {
+  width: 85%;
+}
+
 @font-face {
   font-family: 'Poppins';
   font-style: normal;
@@ -134,6 +139,10 @@
   display: flex;
 }
 
+
+#AbrirPanel {
+  float: right;
+}
 #Logo{
   height: 23vw;
   width: 29vw;
