@@ -38,7 +38,8 @@ var map, platform;
 var pos, latitud, longitud;
 var db = firebase.firestore();
 var Email, Titulo, Contenido, Creador;
-
+var LatitudBD, LongitudBD, EmailBD;
+var distance;
 // Handle Cordova Device Ready Event
 $$(document).on('deviceready', function() {
     console.log("Device is ready!");
@@ -203,22 +204,29 @@ $$(document).on('page:init', '.page[data-name="crear-alerta"]', function (e) {
         } else {
             app.dialog.alert("Complete todos los campos", "Atención");
         }
+        var Valor = 0;
+        if (ExtenderZona == true) {
+            var UbicacionRef = db.collection("Ubicacion").get()
+            .then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+
+            /*.onSnapshot((querySnapchot) =>{
+                querySnapshot.forEach((doc) => {*/
+                    console.log(doc.id, " => ", doc.data());
+                    EmailBD = doc.id;
+                    LatitudBD = doc.data().Latitud;
+                    LongitudBD = doc.data().Longitud;
+                   
+                });
+                Calculardistancia(LatitudBD, LongitudBD)
+            })  
+            var Valor= $$("#NroRangoAEnviar").val();
+            if (Valor <= distance) {
+                EnviarAlerta;
+            }
+            
+        }
     })
-    var Valor = 0;
-    if (ExtenderZona == true) {
-        var UbicacionRef = db.collection("Ubicacion");
-        var query = UbicacionRef.get()
-        .onSnapshot((querySnapchot) =>{
-            querySnapchot.forEach((doc) => {
-                console.log(doc.id, " => ", doc.data());
-                LatitudBD = data.doc().Latitud;
-                LongitudBD = data.doc().Longitud;
-               
-            });
-        })   
-        var Valor= $$("#NroRangoAEnviar").val();
-        Calculardistancia(LatitudBD, LongitudBD)
-    }
 })
 
 
@@ -418,7 +426,12 @@ function CrearUsuario(varEmail,varPassword) {
     // Usamos la API de google para medir la distancia entre 2 puntos
     var ubi1 = new google.maps.LatLng(latitudUser, longitudUser);
     var ubi2 = new google.maps.LatLng(latitud2, longitud2)
-    var distance = google.maps.geometry.spherical.computeDistanceBetween(ubi1, ubi2);
+    distance = google.maps.geometry.spherical.computeDistanceBetween(ubi1, ubi2);
     // distancia en metros
-    console.log(((distance).toFixed(2) + ' metros'));
-    return ((distance).toFixed(2)) }
+    distance = parseInt(distance);
+    console.log((distance) + ' metros');
+     }
+
+function EnviarAlerta() {
+
+}
