@@ -106,6 +106,55 @@ $$(document).on('page:init', '.page[data-name="about"]', function (e) {
 })
 
 
+
+$$(document).on('page:init', '.page[data-name="agregar-contacto"]', function (e) {
+var i = 0;
+    // Do something here when page with data-name="about" attribute loaded and initialized
+    console.log("VISTA AgregarContactos");
+    var UsuariosRef = db.collection("Usuarios").orderBy("nombre").get()
+            .then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+
+            /*.onSnapshot((querySnapchot) =>{
+                querySnapshot.forEach((doc) => {*/
+                    console.log(doc.id, " => ", doc.data());
+                    $$("#ResulBusquedaUsers").append(`<li class="item-content UserBusqueda">
+                                                        <div class="item-inner">
+                                                            <div class="item-title" id="${doc.id}">${doc.id}</div>
+                                                        </div>
+                                                    </li>`);
+
+                });
+        $$(".UserBusqueda").on('click', function() {
+        console.log("hice click");
+       /*var IntegrantesGrupo[i] = $$(this.id);
+       for (var i = 0; i < IntegrantesGrupo.length; i++) {
+           console.log("Integrantes del grupo:" + IntegrantesGrupo[i]);
+       }
+        i= i + 1; */
+    })
+            }) 
+            .catch((error) => {
+                console.log("Error getting documents:" + error);
+            })
+    var searchbar = app.searchbar.create({
+    el: '.searchbar',
+    searchContainer: '.list',
+    searchIn: '.item-title',
+    on: {
+        search(sb, query, previousQuery) {
+        console.log(query, previousQuery);
+          }
+        }
+      });
+   
+})
+
+
+
+
+
+
 $$(document).on('page:init', '.page[data-name="ver-grupos"]', function (e) {
     // Do something here when page with data-name="about" attribute loaded and initialized
     $$("#NuevoGrupo").on('click', function() {
@@ -116,7 +165,7 @@ $$(document).on('page:init', '.page[data-name="ver-grupos"]', function (e) {
 
 
 $$(document).on('page:init', '.page[data-name="crear-grupo"]', function (e) {
-    // Do something here when page with data-name="about" attribute loaded and initialized
+    // Do something here when page with data-name="about" attribute loaded and initialized>
     $$("#AgregarContactos").on('click', function() {
         if ($$("#NombreGrupo").val() != "") {
             NombreGrupo = $$("#NombreGrupo").val();
@@ -126,21 +175,7 @@ $$(document).on('page:init', '.page[data-name="crear-grupo"]', function (e) {
             app.dialog.alert("Complete todos los campos", "Atención");
         }
     })
-   /* IdGrupo=;
-    var grupo = {
-        nombre : NombreGrupo,
-    };
-    db.collection("Grupos").doc(IdGrupo).set(grupo);*/
-      var searchbar = app.searchbar.create({
-       /* el: '.searchbar',
-        searchContainer: '.list',
-        searchIn: '.item-title',*/
-        on: {
-          search(sb, query, previousQuery) {
-            console.log(query, previousQuery);
-           }
-        }
-    })
+
 })
 
 $$(document).on('page:init', '.page[data-name="crear-alerta"]', function (e) {
@@ -163,6 +198,8 @@ $$(document).on('page:init', '.page[data-name="crear-alerta"]', function (e) {
         if (ExtenderDest == false) {
             $$("#UsuarioExt").removeClass("invisible").addClass("visible");
             ExtenderDest = true;
+            Destinatario = $$("#DestinatarioAlerta").val();
+            console.log("El Destinatario es " + Destinatario)
             console.log("deberia mostrar usuarios ");
         } else {
             $$("#UsuarioExt").removeClass("visible").addClass("invisible");
@@ -183,47 +220,37 @@ $$(document).on('page:init', '.page[data-name="crear-alerta"]', function (e) {
         }
     })
     $$("#BtnEnviarAlerta").on('click', function() {
+        var i = 0;
         if(($$("#TituloAlerta").val() != "") && ($$("#ContenidoAlerta").val() != "")) {
             Titulo = $$("#TituloAlerta").val();
             console.log("El titulo es " + Titulo);
             Contenido = $$("#ContenidoAlerta").val();
             console.log("El contenido es " + Contenido);
-            Destinatario = $$("#DestinatarioAlerta").val();
-            console.log("El Destinatario es " + Destinatario)
             const timestamp = Date.now(); 
             const Fecha = new Date(timestamp);
             console.log(Fecha);
             Creador = EmailActivo; 
-            db.collection('Alerta').add({
-                Titulo,
-                Contenido,
-                Fecha,
-                Creador,
-                Destinatario
-            })
+            CrearAlerta();
         } else {
             app.dialog.alert("Complete todos los campos", "Atención");
         }
-        var Valor = 0;
         if (ExtenderZona == true) {
+            if ($$("#NroRangoAEnviar").val() != "") {
+                Valor= $$("#NroRangoAEnviar").val();
+            }
             var UbicacionRef = db.collection("Ubicacion").get()
             .then((querySnapshot) => {
                 querySnapshot.forEach((doc) => {
-
-            /*.onSnapshot((querySnapchot) =>{
-                querySnapshot.forEach((doc) => {*/
                     console.log(doc.id, " => ", doc.data());
                     EmailBD = doc.id;
                     LatitudBD = doc.data().Latitud;
                     LongitudBD = doc.data().Longitud;
-                   
+                    Calculardistancia(LatitudBD, LongitudBD)
+                    if (Valor <= distance) {
+                        Destinatarios (EmailBD, i);
+                    }
                 });
-                Calculardistancia(LatitudBD, LongitudBD)
             })  
-            var Valor= $$("#NroRangoAEnviar").val();
-            if (Valor <= distance) {
-                EnviarAlerta;
-            }
             
         }
     })
@@ -385,10 +412,6 @@ var Password="";
                    // nombre : NombreUsuario
                 //};
                 //db.collection("Usuarios").doc(Email).set(usuario);
-            
-                 db.collection('Usuarios').doc(Email).set({
-                nombre : NombreUsuario
-                })
 
             }
         }
@@ -403,6 +426,7 @@ function CrearUsuario(varEmail,varPassword) {
         .then(function(){
             console.log("Usuario creado");
             mainView.router.navigate('/inicio/');
+            SubirUsuario;
         } )
         .catch(function(error) {
             // Handle Errors here.
@@ -432,6 +456,27 @@ function CrearUsuario(varEmail,varPassword) {
     console.log((distance) + ' metros');
      }
 
-function EnviarAlerta() {
+function Destinatarios(Emaildest, f) {
+    console.log("Entre a enviar Alerta")
+    DestinatariosAlerta[f] = Emaildest;
+       for (var i = 0; i < DestinatariosAlerta.length; i++) {
+           console.log("Integrantes del grupo:" + IntegrantesGrupo[i]);
+       }
+        f= f + 1;     
+}
 
+function SubirUsuario () {
+    db.collection('Usuarios').doc(Email).set({
+                nombre : NombreUsuario
+                })
+}
+
+function CrearAlerta () {
+    db.collection('Alerta').add({
+                Titulo,
+                Contenido,
+                Fecha,
+                Creador,
+                Destinatario
+            })
 }
