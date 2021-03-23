@@ -34,8 +34,11 @@ var EmailUsuario ="";
 var PasswordUsuario="";
 var ValorRango=0;
 var latitudUsuario,longitudUsuario;
-var map, platform;
-var pos, latitud, longitud;
+var map;
+var platform;
+var pos;
+var latitud;
+var longitud;
 var db = firebase.firestore();
 var Email, Titulo, Contenido, Creador;
 var LatitudBD, LongitudBD, EmailBD;
@@ -43,10 +46,49 @@ var distance;
 // Handle Cordova Device Ready Event
 $$(document).on('deviceready', function() {
     console.log("Device is ready!");
+    platform = new H.service.Platform({
+        'apikey': 'ZHfZ_YQ-I1kSqKnmpWU7TMZQk5Vcuhv6CVvoawrGSwY'
+    });
+
+
+     onSuccess = function(position) {
+       // var miSetOut = setTimeout( CalcularUbicacion(latitudUser, longitudUser) , 120000 );                  
+
+        
+
+
+
+
+
+       /* alert('Latitude: '          + position.coords.latitude          + '\n' +
+              'Longitude: '         + position.coords.longitude         + '\n' +
+              'Altitude: '          + position.coords.altitude          + '\n' +
+              'Accuracy: '          + position.coords.accuracy          + '\n' +
+              'Altitude Accuracy: ' + position.coords.altitudeAccuracy  + '\n' +
+              'Heading: '           + position.coords.heading           + '\n' +
+              'Speed: '             + position.coords.speed             + '\n' +
+              'Timestamp: '         + position.timestamp                + '\n');*/
+        latitudUser = position.coords.latitude;
+        longitudUser = position.coords.longitude;
+        console.log("La latitud es: " + latitudUser + " y la longitud: " + longitudUser);
+
+    
+    };
+ 
+    // onError Callback receives a PositionError object
+    //
+    function onError(error) {
+        alert('code: '    + error.code    + '\n' +
+              'message: ' + error.message + '\n');
+    }
+ 
+    navigator.geolocation.getCurrentPosition(onSuccess, onError);
 });
 
 $$(document).on('page:init', '.page[data-name="index"]', function (e) {
     console.log("Vista index");
+        //
+        
   $$("#MantenerSesion").on('click', function() {
     
   })
@@ -58,6 +100,7 @@ $$(document).on('page:init', '.page[data-name="index"]', function (e) {
                 firebase.auth().signInWithEmailAndPassword(EmailUsuario, PasswordUsuario)
                     .then((user) => {
                         EmailActivo = EmailUsuario;
+
                         mainView.router.navigate('/inicio/');
                       })
                       .catch((error) => {
@@ -84,7 +127,8 @@ $$(document).on('page:init', '.page[data-name="index"]', function (e) {
     $$('.login-screen').on('loginscreen:closed', function (e) {
       console.log('Login screen closed')
     });
-    
+
+    // Do something here when page with data-name="about" attribute loaded and initialized
     $$("#Ir-Registrarse").on('click', function() {
         console.log('click en Registrarse');
         mainView.router.navigate('/registro/');
@@ -180,6 +224,25 @@ $$(document).on('page:init', '.page[data-name="crear-grupo"]', function (e) {
 
 $$(document).on('page:init', '.page[data-name="crear-alerta"]', function (e) {
     var EnvioA= "";
+        console.log("vista crear-alerta");
+        
+        var defaultLayers = platform.createDefaultLayers();
+ 
+ 
+ 
+        // Instantiate (and display) a map object:
+        map = new H.Map(
+            document.getElementById('mapContainer'),
+            defaultLayers.vector.normal.map,
+            {
+                zoom: 14,
+                center: { lat: latitudUser, lng: longitudUser }
+            });
+            coords = {lat: latitudUser, lng: longitudUser};
+            marker = new H.map.Marker(coords);
+            // Add the marker to the map and center the map at the location of the marker:
+            map.addObject(marker);
+            map.setCenter(coords);
     console.log("Vista crear-alerta");
     var ExtenderZona = false;
     $$("#BtnExtenderZona").on('click', function() {
@@ -264,62 +327,7 @@ $$(document).on('page:init', '.page[data-name="inicio"]', function (e) {
          // onSuccess Callback
     // This method accepts a Position object, which contains the
     // current GPS coordinates
-    //
-    var onSuccess = function(position) {
-        latitudUser = position.coords.latitude;
-        longitudUser = position.coords.longitude;                   
-        db.collection('Ubicacion').doc(EmailActivo).set({
-            Latitud : latitudUser,
-            Longitud : longitudUser
-        })
-
-        console.log("La latitud es: " + latitudUser + " y la longitud: " + longitudUser);
-
-
-        platform = new H.service.Platform({
-            'apikey': 'ZHfZ_YQ-I1kSqKnmpWU7TMZQk5Vcuhv6CVvoawrGSwY'
-        });
-        var defaultLayers = platform.createDefaultLayers();
- 
- 
- 
-        // Instantiate (and display) a map object:
-        map = new H.Map(
-            document.getElementById('mapContainer'),
-            defaultLayers.vector.normal.map,
-            {
-                zoom: 14,
-                center: { lat: latitudUser, lng: longitudUser }
-            });
-            coords = {lat: latitudUser, lng: longitudUser};
-            marker = new H.map.Marker(coords);
-            // Add the marker to the map and center the map at the location of the marker:
-            map.addObject(marker);
-            map.setCenter(coords);
-
-
-
-       /* alert('Latitude: '          + position.coords.latitude          + '\n' +
-              'Longitude: '         + position.coords.longitude         + '\n' +
-              'Altitude: '          + position.coords.altitude          + '\n' +
-              'Accuracy: '          + position.coords.accuracy          + '\n' +
-              'Altitude Accuracy: ' + position.coords.altitudeAccuracy  + '\n' +
-              'Heading: '           + position.coords.heading           + '\n' +
-              'Speed: '             + position.coords.speed             + '\n' +
-              'Timestamp: '         + position.timestamp                + '\n');*/
-    };
- 
-    // onError Callback receives a PositionError object
-    //
-    function onError(error) {
-        alert('code: '    + error.code    + '\n' +
-              'message: ' + error.message + '\n');
-    }
- 
-    navigator.geolocation.getCurrentPosition(onSuccess, onError);
-    // Do something here when page with data-name="about" attribute loaded and initialized
-
-
+    var miSetOut = setTimeout( ActualizarUbicacion(latitudUser, longitudUser,EmailActivo) , 120000 );
     $$("#CrearAlerta").on('click', function() {
         mainView.router.navigate('/crear-alerta/');
     })
@@ -373,7 +381,12 @@ $$(document).on('page:init', '.page[data-name="inicio"]', function (e) {
                     </div>
                     `);
         });
-    })    })
+            db.collection('Ubicacion').doc(EmailActivo).set({
+            Latitud : latitudUser,
+            Longitud : longitudUser
+        })
+    })    
+})
 
     //-----------------------------------------
     console.log("El email activo es " + EmailActivo);
@@ -480,3 +493,36 @@ function CrearAlerta () {
                 Destinatario
             })
 }
+
+function ActualizarUbicacion(latitudUser, longitudUser, EmailActivo) {
+    console.log("llegue a la funcion de ActualizarUbicacion");
+    var UbicacionRef = db.collection("Ubicacion").doc(EmailActivo).get()
+        .then((doc) => {
+           // querySnapshot.forEach((doc) => {
+                console.log(doc.id, " => ", doc.data());
+                EmailBD = doc.id;
+                LatitudBD = doc.data().Latitud;
+                LongitudBD = doc.data().Longitud;
+                if (latitudUser != LatitudBD) {
+                        db.collection("Ubicacion").doc(EmailActivo).update
+                        ({ Latitud: LatitudBD })
+                        .then(function() {
+                            console.log("latitud actualizada ok");
+                        })
+                        .catch(function(error) {
+                            console.log("Error: " + error);
+                        });
+                } if (longitudUser != LongitudBD) {
+                    db.collection("Ubicacion").doc(EmailActivo).update
+                    ({ Longitud: LongitudBD })
+                    .then(function() {
+                        console.log("longitud actualizada ok");
+                    })
+                    .catch(function(error) {
+                        console.log("Error: " + error);
+                    });
+                } 
+            //})
+        })
+}
+
