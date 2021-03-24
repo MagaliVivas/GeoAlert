@@ -11,6 +11,11 @@
   --f7-theme-color-shade: #00d66c;
   --f7-theme-color-tint: #29ff94;
 }
+.H_imprint{
+  display:none;
+  visibility: none;
+}
+
 .title {
   text-shadow: #00FF80;
 }

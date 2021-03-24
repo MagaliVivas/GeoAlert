@@ -231,6 +231,18 @@ $$(document).on('page:init', '.page[data-name="crear-alerta"]', function (e) {
  
  
         // Instantiate (and display) a map object:
+        var circle = new H.map.Circle(
+            new H.geo.Point(latitudUser, longitudUser), //center
+                600, // Radius in meters
+        { style: {
+          fillColor: 'rgba(0,255,128,0.25)',
+          lineWidth: 3,
+          strokeColor: 'rgba(0,255,128,1)'
+      } }
+  );
+
+  
+
         map = new H.Map(
             document.getElementById('mapContainer'),
             defaultLayers.vector.normal.map,
@@ -239,10 +251,24 @@ $$(document).on('page:init', '.page[data-name="crear-alerta"]', function (e) {
                 center: { lat: latitudUser, lng: longitudUser }
             });
             coords = {lat: latitudUser, lng: longitudUser};
-            marker = new H.map.Marker(coords);
+            var ui = H.ui.UI.createDefault(map, defaultLayers, 'es-ES')
+ 
+  // Configuramos posicion de las opciones
+            var mapSettings = ui.getControl('mapsettings');
+            var zoom = ui.getControl('zoom');
+            var scalebar = ui.getControl('scalebar');
+ 
+  mapSettings.setAlignment('top-right');
+  zoom.setAlignment('right-bottom');
+  scalebar.setAlignment('bottom-left');
+
+            icon = new H.map.Icon('img/ubi.png');
+            marker = new H.map.Marker((coords), {icon:icon});
             // Add the marker to the map and center the map at the location of the marker:
             map.addObject(marker);
             map.setCenter(coords);
+            map.addObject(circle);
+            behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
     console.log("Vista crear-alerta");
     var ExtenderZona = false;
     $$("#BtnExtenderZona").on('click', function() {
@@ -467,7 +493,7 @@ function CrearUsuario(varEmail,varPassword) {
     // distancia en metros
     distance = parseInt(distance);
     console.log((distance) + ' metros');
-     }
+}
 
 function Destinatarios(Emaildest, f) {
     console.log("Entre a enviar Alerta")
