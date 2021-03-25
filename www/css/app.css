@@ -16,6 +16,13 @@
   visibility: none;
 }
 
+.Select {
+  color: #00FF80;
+}
+
+.NoSelect {
+  
+}
 .title {
   text-shadow: #00FF80;
 }

@@ -43,22 +43,30 @@ var db = firebase.firestore();
 var Email, Titulo, Contenido, Creador;
 var LatitudBD, LongitudBD, EmailBD;
 var distance;
+var IntegrantesGrupo = new Array();
+var UserEmail;
+
+
 // Handle Cordova Device Ready Event
 $$(document).on('deviceready', function() {
     console.log("Device is ready!");
     platform = new H.service.Platform({
         'apikey': 'ZHfZ_YQ-I1kSqKnmpWU7TMZQk5Vcuhv6CVvoawrGSwY'
     });
+   // UbicacionActual;
 
 
-     onSuccess = function(position) {
+});
+
+
+
+$$(document).on('page:init', '.page[data-name="index"]', function (e) {
+    console.log("Vista index");
+    var PrimeraVuelta = true;
+        //
+    //UbicacionActual;
+         onSuccess = function(position) {
        // var miSetOut = setTimeout( CalcularUbicacion(latitudUser, longitudUser) , 120000 );                  
-
-        
-
-
-
-
 
        /* alert('Latitude: '          + position.coords.latitude          + '\n' +
               'Longitude: '         + position.coords.longitude         + '\n' +
@@ -72,23 +80,28 @@ $$(document).on('deviceready', function() {
         longitudUser = position.coords.longitude;
         console.log("La latitud es: " + latitudUser + " y la longitud: " + longitudUser);
 
+        
+        console.log("pasé ActualizarUbicacion");
+        if (PrimeraVuelta != true) {
+            ActualizarUbicacion(latitudUser, longitudUser, EmailActivo);    
+        }
+        //ActualizarUbicacion(latitudUser, longitudUser,EmailActivo);
     
     };
  
     // onError Callback receives a PositionError object
     //
     function onError(error) {
-        alert('code: '    + error.code    + '\n' +
+        console.log('code: '    + error.code    + '\n' +
               'message: ' + error.message + '\n');
     }
  
     navigator.geolocation.getCurrentPosition(onSuccess, onError);
-});
+    
+    var watchID = navigator.geolocation.watchPosition(onSuccess, onError, { timeout: 120000 });
 
-$$(document).on('page:init', '.page[data-name="index"]', function (e) {
-    console.log("Vista index");
-        //
-        
+
+
   $$("#MantenerSesion").on('click', function() {
     
   })
@@ -100,7 +113,9 @@ $$(document).on('page:init', '.page[data-name="index"]', function (e) {
                 firebase.auth().signInWithEmailAndPassword(EmailUsuario, PasswordUsuario)
                     .then((user) => {
                         EmailActivo = EmailUsuario;
+                        PrimeraVuelta = false;
 
+                            //DEBERIA SER CUANDO TRAIGO  LAS ALERTAS
                         mainView.router.navigate('/inicio/');
                       })
                       .catch((error) => {
@@ -155,27 +170,29 @@ $$(document).on('page:init', '.page[data-name="agregar-contacto"]', function (e)
 var i = 0;
     // Do something here when page with data-name="about" attribute loaded and initialized
     console.log("VISTA AgregarContactos");
-    var UsuariosRef = db.collection("Usuarios").orderBy("nombre").get()
+    var UsuariosRef = db.collection("Usuarios").orderBy('nombre'.toLowerCase());
+    UsuariosRef.get()
             .then((querySnapshot) => {
                 querySnapshot.forEach((doc) => {
 
             /*.onSnapshot((querySnapchot) =>{
                 querySnapshot.forEach((doc) => {*/
                     console.log(doc.id, " => ", doc.data());
-                    $$("#ResulBusquedaUsers").append(`<li class="item-content UserBusqueda">
+                    ElNombre = doc.data().nombre;
+                    $$("#ResulBusquedaUsers").append(`<li class="item-content ">
                                                         <div class="item-inner">
-                                                            <div class="item-title" id="${doc.id}">${doc.id}</div>
+                                                            <div class="item-title UserBusqueda NoSelect" id="`+doc.id+`"><p>`+ElNombre+ `</p>`+ doc.id +` </div>
                                                         </div>
                                                     </li>`);
 
                 });
         $$(".UserBusqueda").on('click', function() {
-        console.log("hice click");
-       /*var IntegrantesGrupo[i] = $$(this.id);
-       for (var i = 0; i < IntegrantesGrupo.length; i++) {
-           console.log("Integrantes del grupo:" + IntegrantesGrupo[i]);
-       }
-        i= i + 1; */
+        console.log(this.id);
+        UserEmail=this.id; 
+        console.log("El valor de el mail es " + UserEmail);
+       // UserEmail++;
+        //console.log("El email antes de entrar a la funcion es " + UserEmail);
+        CrearGrupo(UserEmail);
     })
             }) 
             .catch((error) => {
@@ -191,7 +208,12 @@ var i = 0;
           }
         }
       });
-   
+    $$("#BtnCerrarContacto").on('click', function () {
+        mainView.router.navigate('/crear-grupo/');
+    })
+    $$("#CerrarCrearGrupo").on('click', function() {
+        mainView.router.navigate('/inicio/');    
+    })
 })
 
 
@@ -224,52 +246,53 @@ $$(document).on('page:init', '.page[data-name="crear-grupo"]', function (e) {
 
 $$(document).on('page:init', '.page[data-name="crear-alerta"]', function (e) {
     var EnvioA= "";
-        console.log("vista crear-alerta");
-        
-        var defaultLayers = platform.createDefaultLayers();
- 
- 
+    console.log("vista crear-alerta");
+       //MAPA------------------------------------------ 
+    var defaultLayers = platform.createDefaultLayers();
  
         // Instantiate (and display) a map object:
-        var circle = new H.map.Circle(
-            new H.geo.Point(latitudUser, longitudUser), //center
-                600, // Radius in meters
+    var circle = new H.map.Circle(
+        new H.geo.Point(latitudUser, longitudUser), //center
+            600, // Radius in meters
         { style: {
-          fillColor: 'rgba(0,255,128,0.25)',
-          lineWidth: 3,
-          strokeColor: 'rgba(0,255,128,1)'
-      } }
-  );
+            fillColor: 'rgba(0,255,128,0.25)',
+            lineWidth: 3,
+            strokeColor: 'rgba(0,255,128,1)'
+            } 
+        }
+    );
 
-  
 
-        map = new H.Map(
-            document.getElementById('mapContainer'),
-            defaultLayers.vector.normal.map,
+    map = new H.Map(
+        document.getElementById('mapContainer'),
+        defaultLayers.vector.normal.map,
             {
                 zoom: 14,
                 center: { lat: latitudUser, lng: longitudUser }
             });
-            coords = {lat: latitudUser, lng: longitudUser};
-            var ui = H.ui.UI.createDefault(map, defaultLayers, 'es-ES')
+        coords = {lat: latitudUser, lng: longitudUser};
+        var ui = H.ui.UI.createDefault(map, defaultLayers, 'es-ES')
  
   // Configuramos posicion de las opciones
-            var mapSettings = ui.getControl('mapsettings');
-            var zoom = ui.getControl('zoom');
-            var scalebar = ui.getControl('scalebar');
+    var mapSettings = ui.getControl('mapsettings');
+    var zoom = ui.getControl('zoom');
+    var scalebar = ui.getControl('scalebar');
  
-  mapSettings.setAlignment('top-right');
-  zoom.setAlignment('right-bottom');
-  scalebar.setAlignment('bottom-left');
+    mapSettings.setAlignment('top-right');
+    zoom.setAlignment('right-bottom');
+    scalebar.setAlignment('bottom-left');
 
-            icon = new H.map.Icon('img/ubi.png');
-            marker = new H.map.Marker((coords), {icon:icon});
-            // Add the marker to the map and center the map at the location of the marker:
-            map.addObject(marker);
-            map.setCenter(coords);
-            map.addObject(circle);
-            behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
-    console.log("Vista crear-alerta");
+     //ICONO DEL MARCADOR
+    icon = new H.map.Icon('img/ubi.png');
+    marker = new H.map.Marker((coords), {icon:icon});
+        // Add the marker to the map and center the map at the location of the marker:
+    map.addObject(marker);
+    map.setCenter(coords);
+    map.addObject(circle);
+    behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
+
+
+     //ACCIONES DE BOTONES--------------------------------------       
     var ExtenderZona = false;
     $$("#BtnExtenderZona").on('click', function() {
         if (ExtenderZona == false) {
@@ -282,6 +305,8 @@ $$(document).on('page:init', '.page[data-name="crear-alerta"]', function (e) {
             console.log("deberia borrar zonas");
         }
     })
+
+
     var ExtenderDest = false;
     $$("#BtnExtenderUsuario").on('click', function() {
         if (ExtenderDest == false) {
@@ -296,6 +321,8 @@ $$(document).on('page:init', '.page[data-name="crear-alerta"]', function (e) {
             console.log("deberia borrar usuarios");
         }
     })
+
+
     var ExtenderGrupo = false;
     $$("#BtnExtenderGrupo").on('click', function() {
         if (ExtenderGrupo == false) {
@@ -308,6 +335,8 @@ $$(document).on('page:init', '.page[data-name="crear-alerta"]', function (e) {
             console.log("deberia borrar zona de grupos");
         }
     })
+
+
     $$("#BtnEnviarAlerta").on('click', function() {
         var i = 0;
         if(($$("#TituloAlerta").val() != "") && ($$("#ContenidoAlerta").val() != "")) {
@@ -350,10 +379,14 @@ $$(document).on('page:init', '.page[data-name="crear-alerta"]', function (e) {
 
 
 $$(document).on('page:init', '.page[data-name="inicio"]', function (e) {
-         // onSuccess Callback
-    // This method accepts a Position object, which contains the
-    // current GPS coordinates
-    var miSetOut = setTimeout( ActualizarUbicacion(latitudUser, longitudUser,EmailActivo) , 120000 );
+    //ACTUALIZO LA POSICION
+    //var miSetOut = setTimeout( ActualizarUbicacion(latitudUser, longitudUser,EmailActivo) , 120000 );
+    //setInterval(UbicacionActual, 120000);
+    /*UbicacionActual => {
+        return new Promise 
+    }*/
+    //setInterval() , 120000);
+
     $$("#CrearAlerta").on('click', function() {
         mainView.router.navigate('/crear-alerta/');
     })
@@ -363,14 +396,21 @@ $$(document).on('page:init', '.page[data-name="inicio"]', function (e) {
       });
         mainView.router.navigate('/ayuda/');
     })
+
+
+    //VISUALIZACION DE ENVIADAS 
     $$("#ContEnviadas").on('click', function() {
         $$("#PageEnviadas").removeClass("invisible").addClass("visible");
         $$("#PageRecibidas").removeClass("visible").addClass("invisible");
+
         $$("#TxtEnviadas").removeClass("OFF");
+        $$("#Enviadas").attr('src','img/enviadasON.png');
+
         $$("#Recibidas").attr('src','img/recibidasOFF.png');
         $$("#TxtRecibidas").addClass("OFF");
-        $$("#Enviadas").attr('src','img/enviadasON.png');
         console.log("Remove class recibidas");
+
+        //LAS TRAIGO DE LA BD
         var EnviadasRef = db.collection("Alerta");
         var query = EnviadasRef.where("Creador", "==", EmailActivo)
         .onSnapshot((querySnapchot) =>{
@@ -386,14 +426,21 @@ $$(document).on('page:init', '.page[data-name="inicio"]', function (e) {
         });
     })
     })
+
+    //VISUALIZACION DE RECIBIDAS
     $$("#ContRecibidas").on('click', function() {
         $$("#PageEnviadas").removeClass("visible").addClass("invisible");
         $$("#PageRecibidas").removeClass("invisible").addClass("visible");
         console.log("Remove class enviadas");
+
         $$("#TxtRecibidas").removeClass("OFF");
-        $$("#Enviadas").attr('src','img/enviadasOFF.png');
-        $$("#TxtEnviadas").addClass("OFF");
         $$("#Recibidas").attr('src','img/recibidasON.png');
+
+        $$("#TxtEnviadas").addClass("OFF");
+        $$("#Enviadas").attr('src','img/enviadasOFF.png');
+
+
+        //LAS TRIAGO DE LA BD
         var RecibidasRef = db.collection("Alerta");
         var query = RecibidasRef.where("Destinatario", "==", EmailActivo)
         .onSnapshot((querySnapchot) =>{
@@ -407,6 +454,7 @@ $$(document).on('page:init', '.page[data-name="inicio"]', function (e) {
                     </div>
                     `);
         });
+            //GUARDO LA UBICACION EN LA BD
             db.collection('Ubicacion').doc(EmailActivo).set({
             Latitud : latitudUser,
             Longitud : longitudUser
@@ -505,9 +553,11 @@ function Destinatarios(Emaildest, f) {
 }
 
 function SubirUsuario () {
+    console.log('Llegue a subir usuario');
     db.collection('Usuarios').doc(Email).set({
-                nombre : NombreUsuario
+                nombre : NombreUsuario,
                 })
+    console.log('Subi el nombre');
 }
 
 function CrearAlerta () {
@@ -534,21 +584,41 @@ function ActualizarUbicacion(latitudUser, longitudUser, EmailActivo) {
                         ({ Latitud: LatitudBD })
                         .then(function() {
                             console.log("latitud actualizada ok");
+                            console.log("la nueva latitud es: " + LatitudBD);
                         })
                         .catch(function(error) {
                             console.log("Error: " + error);
                         });
-                } if (longitudUser != LongitudBD) {
+                } else {
+                    console.log("Latitud sigue siendo igual");
+                } ;
+                if (longitudUser != LongitudBD) {
                     db.collection("Ubicacion").doc(EmailActivo).update
                     ({ Longitud: LongitudBD })
                     .then(function() {
                         console.log("longitud actualizada ok");
+                        console.log("la nueva longitud es: " + LongitudBD);
                     })
                     .catch(function(error) {
                         console.log("Error: " + error);
                     });
-                } 
+                } else {
+                    console.log("longitud sigue siendo igual");
+                }
             //})
         })
 }
 
+function CrearGrupo() {
+    //UserEmail += 1;
+    console.log("El user email es " + UserEmail);
+    IntegrantesGrupo.push(UserEmail);
+    console.log(IntegrantesGrupo); 
+   // db.collection('Grupo').add {
+
+    //}
+}
+
+
+//function UbicacionActual() {
+  //  console.log("llegue ubicacon actual");
