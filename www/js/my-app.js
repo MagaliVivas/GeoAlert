@@ -44,7 +44,11 @@ var Email, Titulo, Contenido, Creador;
 var LatitudBD, LongitudBD, EmailBD;
 var distance;
 var IntegrantesGrupo = new Array();
+var IntegrantesZona = new Array();
 var UserEmail;
+var GruposRef ="";
+var TocoGrupo;
+var Fecha;
 
 
 // Handle Cordova Device Ready Event
@@ -186,18 +190,26 @@ var i = 0;
                                                     </li>`);
 
                 });
-        $$(".UserBusqueda").on('click', function() {
-        console.log(this.id);
-        UserEmail=this.id; 
-        console.log("El valor de el mail es " + UserEmail);
-       // UserEmail++;
-        //console.log("El email antes de entrar a la funcion es " + UserEmail);
-        CrearGrupo(UserEmail);
-    })
+                $$(".UserBusqueda").on('click', function() {
+                    console.log(this.id);
+                    UserEmail=this.id; 
+                    console.log("El valor de el mail es " + UserEmail);
+                   // UserEmail++;
+                    //console.log("El email antes de entrar a la funcion es " + UserEmail);
+                    CrearGrupo(UserEmail);
+                })
             }) 
             .catch((error) => {
                 console.log("Error getting documents:" + error);
             })
+    $$("#ListoGrupo").on('click', function(){
+        var GrupoNombre = $$("#NombreGrupo").val();  
+            db.collection('Grupo').add ({
+                Nombre : GrupoNombre,
+                Integrantes : IntegrantesGrupo   
+            })
+    app.dialog.alert("Grupo " + GrupoNombre + " creado", "¡Listo!");
+    })
     var searchbar = app.searchbar.create({
     el: '.searchbar',
     searchContainer: '.list',
@@ -319,6 +331,7 @@ $$(document).on('page:init', '.page[data-name="crear-alerta"]', function (e) {
             $$("#UsuarioExt").removeClass("visible").addClass("invisible");
             ExtenderDest= false;
             console.log("deberia borrar usuarios");
+            Destinatario = "";
         }
     })
 
@@ -327,6 +340,24 @@ $$(document).on('page:init', '.page[data-name="crear-alerta"]', function (e) {
     $$("#BtnExtenderGrupo").on('click', function() {
         if (ExtenderGrupo == false) {
             $$("#GrupoExt").removeClass("invisible").addClass("visible");
+            var GruposRef = db.collection('Grupo')
+            GruposRef.get()
+                .then((querySnapshot) => {
+                    querySnapshot.forEach((doc) => {
+                        console.log(doc.id, "=>" ,doc.data());
+                        $$("#MostrarGrupos").append(`
+                                <label class="item-checkbox item-content theme-dark">
+                                  <input type="checkbox" name="demo-checkbox" value="Books" />
+                                  <i class="icon icon-checkbox theme-dark"></i>
+                                  <div class=" item-inner theme-dark" >
+                                    <div class="item-title theme-dark Grupos"id=`+ doc.id+`>`+doc.data().Nombre+`</div>
+                                  </div>
+                                </label>`)
+                    })
+                })
+                .catch((error) => {
+                    console.log("Error getting documents: ", error);
+                });
             ExtenderGrupo = true;
             console.log("deberia mostrar zona de grupos");
         } else {
@@ -334,28 +365,31 @@ $$(document).on('page:init', '.page[data-name="crear-alerta"]', function (e) {
             ExtenderGrupo = false;
             console.log("deberia borrar zona de grupos");
         }
+        $$(".Grupos").on('click', function() {
+            console.log("Hizo click");
+            console.log("el id es " + this.id);
+            TocoGrupo = this.id;
+            console.log("Toco el grupo con id " + TocoGrupo);
+        })
     })
 
 
     $$("#BtnEnviarAlerta").on('click', function() {
-        var i = 0;
         if(($$("#TituloAlerta").val() != "") && ($$("#ContenidoAlerta").val() != "")) {
             Titulo = $$("#TituloAlerta").val();
             console.log("El titulo es " + Titulo);
             Contenido = $$("#ContenidoAlerta").val();
             console.log("El contenido es " + Contenido);
             const timestamp = Date.now(); 
-            const Fecha = new Date(timestamp);
+            Fecha = new Date(timestamp);
             console.log(Fecha);
             Creador = EmailActivo; 
-            CrearAlerta();
-        } else {
-            app.dialog.alert("Complete todos los campos", "Atención");
-        }
-        if (ExtenderZona == true) {
-            if ($$("#NroRangoAEnviar").val() != "") {
-                Valor= $$("#NroRangoAEnviar").val();
-            }
+            if (ExtenderZona == true) {
+                if ($$("#NroRangoAEnviar").val() != "") {
+                    console.log("llegue a calcular rango");
+                    Valor= $$("#NroRangoAEnviar").val();
+                    console.log("el valor elegido es " + Valor);
+                }
             var UbicacionRef = db.collection("Ubicacion").get()
             .then((querySnapshot) => {
                 querySnapshot.forEach((doc) => {
@@ -363,15 +397,24 @@ $$(document).on('page:init', '.page[data-name="crear-alerta"]', function (e) {
                     EmailBD = doc.id;
                     LatitudBD = doc.data().Latitud;
                     LongitudBD = doc.data().Longitud;
-                    Calculardistancia(LatitudBD, LongitudBD)
-                    if (Valor <= distance) {
-                        Destinatarios (EmailBD, i);
-                    }
+                    if (LatitudBD != "" && LongitudBD !="") {
+                        console.log("llegue a traer los datos de ubi");
+                        Calculardistancia(LatitudBD, LongitudBD)
+                        
+                        Destinatario = IntegrantesZona;
+                        CrearAlerta();
+                }
                 });
             })  
             
         }
+            //CrearAlerta();
+        } else {
+            app.dialog.alert("Complete todos los campos", "Atención");
+        }
+        app.dialog.alert("Alerta enviada", "¡Listo!");
     })
+
 })
 
 
@@ -400,6 +443,7 @@ $$(document).on('page:init', '.page[data-name="inicio"]', function (e) {
 
     //VISUALIZACION DE ENVIADAS 
     $$("#ContEnviadas").on('click', function() {
+        $$("#AlertasEnviadas2").html("");
         $$("#PageEnviadas").removeClass("invisible").addClass("visible");
         $$("#PageRecibidas").removeClass("visible").addClass("invisible");
 
@@ -429,6 +473,7 @@ $$(document).on('page:init', '.page[data-name="inicio"]', function (e) {
 
     //VISUALIZACION DE RECIBIDAS
     $$("#ContRecibidas").on('click', function() {
+        $$("#AlertasRecibidas2").html("");
         $$("#PageEnviadas").removeClass("visible").addClass("invisible");
         $$("#PageRecibidas").removeClass("invisible").addClass("visible");
         console.log("Remove class enviadas");
@@ -541,16 +586,23 @@ function CrearUsuario(varEmail,varPassword) {
     // distancia en metros
     distance = parseInt(distance);
     console.log((distance) + ' metros');
+    if (distance < Valor) {
+        console.log("llegue al if de Valor<distance");
+        Destinatarios (EmailBD);
+    }
+    //Destinatarios;
 }
 
-function Destinatarios(Emaildest, f) {
+function Destinatarios(Emaildest) {
     console.log("Entre a enviar Alerta")
-    DestinatariosAlerta[f] = Emaildest;
-       for (var i = 0; i < DestinatariosAlerta.length; i++) {
-           console.log("Integrantes del grupo:" + IntegrantesGrupo[i]);
-       }
-        f= f + 1;     
+    console.log("El email Destinatario es " + Emaildest);
+    if (Emaildest != EmailActivo) {
+        IntegrantesZona.push(Emaildest);
+        console.log("los intengrantes en la zona son" + IntegrantesZona);
+        Destinatario = IntegrantesZona;
+    }
 }
+
 
 function SubirUsuario () {
     console.log('Llegue a subir usuario');
@@ -561,13 +613,19 @@ function SubirUsuario () {
 }
 
 function CrearAlerta () {
-    db.collection('Alerta').add({
-                Titulo,
-                Contenido,
-                Fecha,
-                Creador,
-                Destinatario
-            })
+    console.log("llegue a crear alerta");
+    if (Destinatario == "") {
+        app.dialog.alert("El destinatario no puede estar vacio", "Atención");
+    } else {
+        db.collection('Alerta').add({
+                    Titulo,
+                    Contenido,
+                    Fecha,
+                    Creador,
+                    Destinatario
+                })
+        console.log("Alerta enviada a " + Destinatario);
+    }
 }
 
 function ActualizarUbicacion(latitudUser, longitudUser, EmailActivo) {
@@ -613,12 +671,6 @@ function CrearGrupo() {
     //UserEmail += 1;
     console.log("El user email es " + UserEmail);
     IntegrantesGrupo.push(UserEmail);
-    console.log(IntegrantesGrupo); 
-   // db.collection('Grupo').add {
-
-    //}
+    console.log(IntegrantesGrupo);
 }
 
-
-//function UbicacionActual() {
-  //  console.log("llegue ubicacon actual");
