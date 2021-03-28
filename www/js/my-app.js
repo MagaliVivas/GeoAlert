@@ -30,6 +30,7 @@ var app = new Framework7({
 
 var mainView = app.views.create('.view-main');
 var NombreUsuario = "";
+var Destinatario= new Array();
 var EmailUsuario ="";
 var PasswordUsuario="";
 var ValorRango=0;
@@ -45,11 +46,14 @@ var LatitudBD, LongitudBD, EmailBD;
 var distance;
 var IntegrantesGrupo = new Array();
 var IntegrantesZona = new Array();
+var EnviarGrupos = new Array();
+var DestAlerta= new Array();
 var UserEmail;
 var GruposRef ="";
 var TocoGrupo;
 var Fecha;
-
+var DestinatarioAlerta;
+//var TituloAlerta, ContenidoAlerta, FechaAlerta, DestinatarioAlerta, CreadorAlerta;
 
 // Handle Cordova Device Ready Event
 $$(document).on('deviceready', function() {
@@ -208,7 +212,7 @@ var i = 0;
                 Nombre : GrupoNombre,
                 Integrantes : IntegrantesGrupo   
             })
-    app.dialog.alert("Grupo " + GrupoNombre + " creado", "¡Listo!");
+    app.dialog.alert("Grupo " + GrupoNombre + " creado", "¡Listo!", function(){mainView.router.navigate("/inicio/")});
     })
     var searchbar = app.searchbar.create({
     el: '.searchbar',
@@ -323,10 +327,7 @@ $$(document).on('page:init', '.page[data-name="crear-alerta"]', function (e) {
     $$("#BtnExtenderUsuario").on('click', function() {
         if (ExtenderDest == false) {
             $$("#UsuarioExt").removeClass("invisible").addClass("visible");
-            ExtenderDest = true;
-            Destinatario = $$("#DestinatarioAlerta").val();
-            console.log("El Destinatario es " + Destinatario)
-            console.log("deberia mostrar usuarios ");
+            ExtenderDest = true;  
         } else {
             $$("#UsuarioExt").removeClass("visible").addClass("invisible");
             ExtenderDest= false;
@@ -346,77 +347,108 @@ $$(document).on('page:init', '.page[data-name="crear-alerta"]', function (e) {
                     querySnapshot.forEach((doc) => {
                         console.log(doc.id, "=>" ,doc.data());
                         $$("#MostrarGrupos").append(`
-                                <label class="item-checkbox item-content theme-dark">
-                                  <input type="checkbox" name="demo-checkbox" value="Books" />
-                                  <i class="icon icon-checkbox theme-dark"></i>
-                                  <div class=" item-inner theme-dark" >
-                                    <div class="item-title theme-dark Grupos"id=`+ doc.id+`>`+doc.data().Nombre+`</div>
-                                  </div>
-                                </label>`)
+                                <li><a href="#" class="Grupos" id=` + doc.id+`>`+doc.data().Nombre +`</a></li>`);
+
+                            })
+
+
+
+                    $$(".Grupos").on('click', function() {
+                        console.log("Hizo click");
+                        TocoGrupo = this.id;
+                        console.log("Toco el grupo con id " + TocoGrupo);
+                        //TraeMiembros();
+                        app.dialog.confirm('¿Desea enviar la alerta' + TocoGrupo + '?', '¡Atención!', function () {TraeMiembros()});
+                        })  
                     })
-                })
                 .catch((error) => {
                     console.log("Error getting documents: ", error);
                 });
             ExtenderGrupo = true;
             console.log("deberia mostrar zona de grupos");
-        } else {
+        }else {
             $$("#GrupoExt").removeClass("visible").addClass("invisible");
             ExtenderGrupo = false;
+            DestinatarioAlerta = "";
             console.log("deberia borrar zona de grupos");
         }
-        $$(".Grupos").on('click', function() {
-            console.log("Hizo click");
-            console.log("el id es " + this.id);
-            TocoGrupo = this.id;
-            console.log("Toco el grupo con id " + TocoGrupo);
-        })
     })
 
 
     $$("#BtnEnviarAlerta").on('click', function() {
         if(($$("#TituloAlerta").val() != "") && ($$("#ContenidoAlerta").val() != "")) {
-            Titulo = $$("#TituloAlerta").val();
-            console.log("El titulo es " + Titulo);
-            Contenido = $$("#ContenidoAlerta").val();
-            console.log("El contenido es " + Contenido);
+            TituloAlerta = $$("#TituloAlerta").val();
+            console.log("El titulo es " + TituloAlerta);
+            ContenidoAlerta = $$("#ContenidoAlerta").val();
+            console.log("El contenido es " + ContenidoAlerta);
             const timestamp = Date.now(); 
-            Fecha = new Date(timestamp);
-            console.log(Fecha);
-            Creador = EmailActivo; 
+            FechaAlerta = new Date(timestamp);
+            console.log(FechaAlerta);
+            CreadorAlerta = EmailActivo; 
+            if (ExtenderDest == true) {
+                if ($$("#DestinatarioAlerta").val() == "") {
+                    app.dialog.alert("El usuario no puede estar vacio", "¡Atención!");
+                } else {
+                    DestinatarioAlerta = $$("#DestinatarioAlerta").val();
+                    //CrearAlerta(DestinatarioAlerta);
+                    console.log("El Destinatario es " + DestinatarioAlerta)
+                    if (DestinatarioAlerta == "") {
+                        app.dialog.alert("El destinatario no puede estar vacio", "Atención");
+                    } else {
+                        db.collection('Alerta').add({
+                            Titulo : TituloAlerta,
+                            Contenido: ContenidoAlerta,
+                            Fecha : FechaAlerta,
+                            Creador: CreadorAlerta,
+                            Destinatario: DestinatarioAlerta
+                        })
+                    console.log("Alerta enviada a " + DestinatarioAlerta);
+                    app.dialog.alert('Alerta enviada','¡Listo!', function(){mainView.router.navigate("/inicio/")}); 
+                    }
+                    console.log("deberia mostrar usuarios ");   
+                }
+            }
+            if (ExtenderGrupo == true) {
+                console.log("Llegue al if de ExtenderGrupo == true");
+                    console.log("Alerta enviada a " + DestinatarioAlerta);
+            }
             if (ExtenderZona == true) {
                 if ($$("#NroRangoAEnviar").val() != "") {
                     console.log("llegue a calcular rango");
                     Valor= $$("#NroRangoAEnviar").val();
                     console.log("el valor elegido es " + Valor);
                 }
-            var UbicacionRef = db.collection("Ubicacion").get()
-            .then((querySnapshot) => {
-                querySnapshot.forEach((doc) => {
-                    console.log(doc.id, " => ", doc.data());
-                    EmailBD = doc.id;
-                    LatitudBD = doc.data().Latitud;
-                    LongitudBD = doc.data().Longitud;
-                    if (LatitudBD != "" && LongitudBD !="") {
-                        console.log("llegue a traer los datos de ubi");
+                var UbicacionRef = db.collection("Ubicacion").get()
+                .then((querySnapshot) => {
+                    querySnapshot.forEach((doc) => {
+                        console.log(doc.id, " => ", doc.data());
+                        EmailBD = doc.id;
+                        LatitudBD = doc.data().Latitud;
+                        LongitudBD = doc.data().Longitud;
                         Calculardistancia(LatitudBD, LongitudBD)
-                        
-                        Destinatario = IntegrantesZona;
-                        CrearAlerta();
-                }
-                });
-            })  
+                        if (distance < Valor) {
+                            if (EmailBD != EmailActivo) {
+                                IntegrantesZona.push(EmailBD);
+                                console.log("los intengrantes en la zona son" + IntegrantesZona);
+                            }    
+                        }
+                            //app.dialog.alert('Alerta enviada','¡Listo!', function(){mainView.router.navigate("/inicio/")}); 
+                    });
+                    DestinatarioAlerta = IntegrantesZona;
+                    console.log("Antes de ir a crear alerta tengo " + DestinatarioAlerta);
+                    CrearAlerta();
+                }) 
+               /* .catch((error) => {
+                    console.log("Error getting documents: ", error);
+                });*/
+
             
-        }
-            //CrearAlerta();
-        } else {
-            app.dialog.alert("Complete todos los campos", "Atención");
-        }
-        app.dialog.alert("Alerta enviada", "¡Listo!");
+            } else {
+                app.dialog.alert("Complete todos los campos", "Atención");
+            } 
+        } 
     })
-
 })
-
 
 
 
@@ -429,6 +461,8 @@ $$(document).on('page:init', '.page[data-name="inicio"]', function (e) {
         return new Promise 
     }*/
     //setInterval() , 120000);
+    console.log("LLLEGUE AL INICIO");
+
 
     $$("#CrearAlerta").on('click', function() {
         mainView.router.navigate('/crear-alerta/');
@@ -462,13 +496,15 @@ $$(document).on('page:init', '.page[data-name="inicio"]', function (e) {
                 console.log(doc.id, " => ", doc.data());
                 TituloEnv=doc.data().Titulo;
                 ContenidoEnv =doc.data().Contenido;
-                $$("#AlertasEnviadas2").append(`<div id="AlertasEnviadas" class="block-title theme-dark">
-                    <p>
-                    <h3>` + TituloEnv +`</h3></p> <p>`+ContenidoEnv+`</p>
-                    </div>
-                    `);
-        });
-    })
+                DestinatarioEnv = doc.data().Destinatario;
+                $$("#AlertasEnviadas2").append(`<div class="block block-strong">
+                <div class="block-title"><h3>`+TituloEnv+`</h3></div>
+                    <div class="block-header">Enviada a: `+ DestinatarioEnv+ `</div>
+                        <p>`+ContenidoEnv+` </p>
+                </div>
+                `);
+            });
+        })
     })
 
     //VISUALIZACION DE RECIBIDAS
@@ -487,45 +523,92 @@ $$(document).on('page:init', '.page[data-name="inicio"]', function (e) {
 
         //LAS TRIAGO DE LA BD
         var RecibidasRef = db.collection("Alerta");
-        var query = RecibidasRef.where("Destinatario", "==", EmailActivo)
+        var query = RecibidasRef.where("Destinatario", "array-contains", EmailActivo).where("Creador", "!=", "EmailActivo")
+        //var query = RecibidasRef.where("Destinatario", "==", EmailActivo)
+        //var query = RecibidasRef.where("Creador", "!=", EmailActivo)
         .onSnapshot((querySnapchot) =>{
             querySnapchot.forEach((doc) => {
                 console.log(doc.id, " => ", doc.data());
                 TituloRec=doc.data().Titulo;
                 ContenidoRec =doc.data().Contenido;
-                $$("#AlertasRecibidas2").append(`<div id="AlertasRecibidas" class="block-title theme-dark">
-                    <p>
-                    <h3>` + TituloRec +`</h3></p> <p>`+ContenidoRec+`</p>
-                    </div>
-                    `);
-        });
+                CreadorRec = doc.data().Creador;
+                $$("#AlertasRecibidas2").append(`<div class="block block-strong">
+                <div class="block-title"><h3>`+TituloRec+`</h3></div>
+                    <div class="block-header">Recibida de: `+ CreadorRec+ `</div>
+                        <p>`+ContenidoRec+` </p>
+                    <div class="BtnResponder block-footer "><button class="button col BtnResponder">Toque aquí para responder</button>
+                </div>
+                `);
+            });
+        })
+        var query = RecibidasRef.where("Destinatario", "==", EmailActivo).where("Creador", "!=", EmailActivo)
+        //var query = RecibidasRef.where("Creador", "!=", EmailActivo)
+        .onSnapshot((querySnapchot) =>{
+            querySnapchot.forEach((doc) => {
+                console.log(doc.id, " => ", doc.data());
+                TituloRec=doc.data().Titulo;
+                ContenidoRec =doc.data().Contenido;
+                CreadorRec = doc.data().Creador;
+                $$("#AlertasRecibidas2").append(`<div class="block block-strong">
+                <div class="block-title"><h3>`+TituloRec+`</h3></div>
+                    <div class="block-header">Recibida de: `+ CreadorRec+ `</div>
+                        <p>`+ContenidoRec+` </p>
+                    <div class="block-footer "><button class="button col BtnResponder">Toque aquí para responder</button>
+                </div>
+                `);
+            });
+        })
+
+
+
             //GUARDO LA UBICACION EN LA BD
             db.collection('Ubicacion').doc(EmailActivo).set({
             Latitud : latitudUser,
             Longitud : longitudUser
         })
     })    
-})
 
     //-----------------------------------------
     console.log("El email activo es " + EmailActivo);
     var RecibidasRef = db.collection("Alerta");
-    var query = RecibidasRef.where("Destinatario", "==", EmailActivo)
+    var query = RecibidasRef.where("Destinatario", "array-contains", EmailActivo).where("Creador", "!=", "EmailActivo")
+    //var query = RecibidasRef.where("Destinatario", "==", EmailActivo).where("Destinatario", "!=", EmailActivo)
     .onSnapshot((querySnapchot) =>{
         querySnapchot.forEach((doc) => {
             console.log(doc.id, " => ", doc.data());
             TituloRec=doc.data().Titulo;
             ContenidoRec =doc.data().Contenido;
-            $$("#AlertasRecibidas2").append(`<div id="AlertasRecibidas" class="block-title theme-dark">
-                <p>
-                <h3>` + TituloRec +`</h3></p> <p>`+ContenidoRec+`</p>
+            CreadorRec = doc.data().Creador;
+            $$("#AlertasRecibidas2").append(`<div class="block block-strong">
+                <div class="block-title"><h3>`+TituloRec+`</h3></div>
+                    <div class="block-header">Recibida de: `+ CreadorRec+ `</div>
+                        <p>`+ContenidoRec+` </p>
+                    <div class="block-footer"><button class="button col BtnResponder">Toque aquí para responder</button></div>
                 </div>
-                `);
+            `);
         });
     })
-
-})
-
+    var query = RecibidasRef.where("Destinatario", "==", EmailActivo).where("Creador", "!=", EmailActivo)
+        //var query = RecibidasRef.where("Creador", "!=", EmailActivo)
+        .onSnapshot((querySnapchot) => {
+            querySnapchot.forEach((doc) => {
+                console.log(doc.id, " => ", doc.data());
+                TituloRec=doc.data().Titulo;
+                ContenidoRec =doc.data().Contenido;
+                CreadorRec = doc.data().Creador;
+                $$("#AlertasRecibidas2").append(`<div class="block block-strong">
+                <div class="block-title"><h3>`+TituloRec+`</h3></div>
+                    <div class="block-header">Recibida de: `+ CreadorRec+ `</div>
+                        <p>`+ContenidoRec+` </p>
+                    <div class=" block-footer"><button class="button col BtnResponder">Toque aquí para responder</button></div>
+                </div>
+                `);
+            });
+        })
+  
+    })
+  
+//----------------------------------------------------------------------
 $$(document).on('page:init', '.page[data-name="registro"]', function (e) {
 var Email="";
 var Password="";
@@ -586,21 +669,13 @@ function CrearUsuario(varEmail,varPassword) {
     // distancia en metros
     distance = parseInt(distance);
     console.log((distance) + ' metros');
-    if (distance < Valor) {
-        console.log("llegue al if de Valor<distance");
-        Destinatarios (EmailBD);
-    }
     //Destinatarios;
 }
 
 function Destinatarios(Emaildest) {
     console.log("Entre a enviar Alerta")
     console.log("El email Destinatario es " + Emaildest);
-    if (Emaildest != EmailActivo) {
-        IntegrantesZona.push(Emaildest);
-        console.log("los intengrantes en la zona son" + IntegrantesZona);
-        Destinatario = IntegrantesZona;
-    }
+
 }
 
 
@@ -612,21 +687,27 @@ function SubirUsuario () {
     console.log('Subi el nombre');
 }
 
-function CrearAlerta () {
+function CrearAlerta (){
     console.log("llegue a crear alerta");
-    if (Destinatario == "") {
+    console.log("El destinatario del grupo en la funcion es " + DestinatarioAlerta)
+    if (DestinatarioAlerta == "") {
         app.dialog.alert("El destinatario no puede estar vacio", "Atención");
     } else {
         db.collection('Alerta').add({
-                    Titulo,
-                    Contenido,
-                    Fecha,
-                    Creador,
-                    Destinatario
+                    Titulo : TituloAlerta,
+                    Contenido: ContenidoAlerta,
+                    Fecha : FechaAlerta,
+                    Creador: CreadorAlerta,
+                    Destinatario: DestinatarioAlerta
                 })
-        console.log("Alerta enviada a " + Destinatario);
+        app.dialog.alert('Alerta enviada','¡Listo!', function(){mainView.router.navigate("/inicio/")}); 
+        console.log("Alerta enviada a " + DestinatarioAlerta);
+
+        
     }
 }
+
+
 
 function ActualizarUbicacion(latitudUser, longitudUser, EmailActivo) {
     console.log("llegue a la funcion de ActualizarUbicacion");
@@ -674,3 +755,25 @@ function CrearGrupo() {
     console.log(IntegrantesGrupo);
 }
 
+
+function TraeMiembros(){
+    var query = db.collection("Grupo").doc(TocoGrupo).get()
+    .then((doc) => {
+        console.log(doc.id, " => ", doc.data());
+        console.log("Entre en la consulta");
+        DestAlerta = doc.data().Integrantes
+        console.log("los integrantes son: " + DestAlerta);
+        DestinatarioAlerta = DestAlerta;
+        console.log("En destinatario quedo: " + DestinatarioAlerta);
+        if(($$("#TituloAlerta").val() != "") && ($$("#ContenidoAlerta").val() != "")) {
+            TituloAlerta = $$("#TituloAlerta").val();
+            console.log("El titulo es " + TituloAlerta);
+            ContenidoAlerta = $$("#ContenidoAlerta").val();
+            console.log("El contenido es " + ContenidoAlerta);
+            const timestamp = Date.now(); 
+            FechaAlerta = new Date(timestamp);
+            console.log(FechaAlerta);
+            CreadorAlerta = EmailActivo; 
+            CrearAlerta();}
+    })
+}
