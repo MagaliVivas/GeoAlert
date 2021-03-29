@@ -24,6 +24,7 @@ var app = new Framework7({
       { path: '/ver-grupos/', url: 'ver-grupos.html', },
       { path: '/crear-grupo/', url: 'crear-grupo.html', },
       { path: '/agregar-contacto/', url: 'agregar-contacto.html', },
+      { path: '/adm-cuenta/', url: 'adm-cuenta.html', },
     ]
     // ... other parameters
   });
@@ -163,7 +164,7 @@ $$(document).on('page:init', '.page[data-name="index"]', function (e) {
 
 $$(document).on('page:init', '.page[data-name="ayuda"]', function (e) {
     // Do something here when page with data-name="about" attribute loaded and initialized
-   $$("#HolaAyuda").val("Hola NOMBRE, ¿En qué puedo ayudarte?" ); 
+   $$("#HolaAyuda").append("<h3><p>Hola " + EmailActivo + ", ¿En qué puedo ayudarte?</p></h3><hr/>" ); 
 })
 // Option 2. Using live 'page:init' event handlers for each page
 $$(document).on('page:init', '.page[data-name="about"]', function (e) {
@@ -242,6 +243,24 @@ $$(document).on('page:init', '.page[data-name="ver-grupos"]', function (e) {
     $$("#NuevoGrupo").on('click', function() {
         mainView.router.navigate('/crear-grupo/');
     })
+    var GruposRef = db.collection('Grupo')
+        GruposRef.get()
+            .then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    console.log(doc.id, "=>" ,doc.data());
+                    $$("#VerGrupos").append(`<li class="accordion-item"><a class="item-content item-link" href="#">
+                            <div class="item-inner">
+                                <div class="item-title">`+doc.data().Nombre+`</div>
+                            </div>
+                        </a>
+                        <div class="accordion-item-content">
+                            <div class="block"><p>`+doc.data().Integrantes+`</p>
+                            </div>
+                        </div>
+                    </li>
+                    `)
+                })
+            })
 })
 
 
@@ -405,7 +424,7 @@ $$(document).on('page:init', '.page[data-name="crear-alerta"]', function (e) {
                     console.log("Alerta enviada a " + DestinatarioAlerta);
                     app.dialog.alert('Alerta enviada','¡Listo!', function(){mainView.router.navigate("/inicio/")}); 
                     }
-                    console.log("deberia mostrar usuarios ");   
+                    //console.log("deberia mostrar usuarios ");   
                 }
             }
             if (ExtenderGrupo == true) {
@@ -443,7 +462,8 @@ $$(document).on('page:init', '.page[data-name="crear-alerta"]', function (e) {
                 });*/
 
             
-            } else {
+        } else {
+                console.log("llegue al dialog alert");
                 app.dialog.alert("Complete todos los campos", "Atención");
             } 
         } 
@@ -499,13 +519,34 @@ $$(document).on('page:init', '.page[data-name="inicio"]', function (e) {
                 DestinatarioEnv = doc.data().Destinatario;
                 $$("#AlertasEnviadas2").append(`<div class="block block-strong">
                 <div class="block-title"><h3>`+TituloEnv+`</h3></div>
-                    <div class="block-header">Enviada a: `+ DestinatarioEnv+ `</div>
                         <p>`+ContenidoEnv+` </p>
-                </div>
+                    <div class="block-header">Enviada a: `+ DestinatarioEnv+ `</div>
                 `);
             });
         })
     })
+//------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     //VISUALIZACION DE RECIBIDAS
     $$("#ContRecibidas").on('click', function() {
@@ -536,7 +577,7 @@ $$(document).on('page:init', '.page[data-name="inicio"]', function (e) {
                 <div class="block-title"><h3>`+TituloRec+`</h3></div>
                     <div class="block-header">Recibida de: `+ CreadorRec+ `</div>
                         <p>`+ContenidoRec+` </p>
-                    <div class="BtnResponder block-footer "><button class="button col BtnResponder">Toque aquí para responder</button>
+                    <div class="block-footer "><button class="button col BtnResponder" id="`+CreadorRec+`">Toque aquí para responder</button>
                 </div>
                 `);
             });
@@ -553,7 +594,7 @@ $$(document).on('page:init', '.page[data-name="inicio"]', function (e) {
                 <div class="block-title"><h3>`+TituloRec+`</h3></div>
                     <div class="block-header">Recibida de: `+ CreadorRec+ `</div>
                         <p>`+ContenidoRec+` </p>
-                    <div class="block-footer "><button class="button col BtnResponder">Toque aquí para responder</button>
+                    <div class="block-footer "><button class="button col BtnResponder" id="`+CreadorRec+`">Toque aquí para responder</button>
                 </div>
                 `);
             });
@@ -583,7 +624,7 @@ $$(document).on('page:init', '.page[data-name="inicio"]', function (e) {
                 <div class="block-title"><h3>`+TituloRec+`</h3></div>
                     <div class="block-header">Recibida de: `+ CreadorRec+ `</div>
                         <p>`+ContenidoRec+` </p>
-                    <div class="block-footer"><button class="button col BtnResponder">Toque aquí para responder</button></div>
+                    <div class="block-footer"><button class="button col BtnResponder" id="`+CreadorRec+`">Toque aquí para responder</button></div>
                 </div>
             `);
         });
@@ -600,12 +641,14 @@ $$(document).on('page:init', '.page[data-name="inicio"]', function (e) {
                 <div class="block-title"><h3>`+TituloRec+`</h3></div>
                     <div class="block-header">Recibida de: `+ CreadorRec+ `</div>
                         <p>`+ContenidoRec+` </p>
-                    <div class=" block-footer"><button class="button col BtnResponder">Toque aquí para responder</button></div>
+                    <div class=" block-footer"><button class="button col BtnResponder" id="`+CreadorRec+`">Toque aquí para responder</button></div>
                 </div>
                 `);
             });
         })
-  
+        $$(".BtnResponder").on('click', function () {
+            console.log("Ya hice click en el creador " + CreadorRec);
+        })
     })
   
 //----------------------------------------------------------------------

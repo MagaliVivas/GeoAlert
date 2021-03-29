@@ -24,6 +24,8 @@
 
     <!-- Your app title -->
     <title class="Titulo">GeoAlert</title>
+    <link rel="shortcut icon" href="img/GeoAlert.png">
+
     <!-- Path to Framework7 Library CSS -->
     <link rel="stylesheet" href="lib/framework7/framework7-bundle.min.css">
     <!-- Path to icons -->
@@ -42,7 +44,7 @@
     <script src="https://js.api.here.com/v3/3.1/mapsjs-ui.js" type="text/javascript" charset="utf-8"></script>
 </head>
 
-<body>
+<body >
     <div id="app">
         <!-- Statusbar overlay -->
         <div class="statusbar theme-dark"></div>
@@ -51,12 +53,12 @@
         <div class="view view-main theme-dark">
         
         <!-- Initial Page, "data-name" contains page name -->
-            <div data-name="index" class="page theme-dark" id=Index>
+            <div data-name="index" class="page theme-dark">
 
-
+            <div >
             <div class="page no-navbar no-toolbar no-swipeback theme-dark">
-                <div class="page-content login-screen-content theme-dark">
-                    <div class="login-screen-title theme-dark">GeoAlert</div>
+                <div class="page-content login-screen-content theme-dark" id="PageIndex">
+                    <div class="login-screen-title theme-dark" id=>GeoAlert</div>
                     <div class="Contenedor"><img id="Logo" src="img/GeoAlert.png"></div>
                     <form>
                     <div class="list theme-dark">
@@ -95,7 +97,7 @@
                                       </div>
                                     </label>
                                 </h6>
-
+                            </div> 
                         </div>
                     </form>
                 </div>

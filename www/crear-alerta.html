@@ -1,3 +1,5 @@
+<!--HASTA ACA FUNCIONA BIENNNN ----------------->
+
 <div class="page theme-dark" data-name="crear-alerta">
     <div class="navbar theme-dark">
         <div class="navbar-inner sliding theme-dark">
@@ -12,11 +14,26 @@
     </div>
     <div class="page-content theme-dark">
         <div class="block block-strong theme-dark">
-            <div><input id="TituloAlerta" type="text" placeholder="Titulo" /></div>
+                <div class="item-inner">
+                  <div class="item-title item-label">Titulo</div>
+                  <div class="item-input-wrap" id="contenedortitulo">
+                    <input type="text" id="TituloAlerta" placeholder="Ingrese el titulo" />
+                    <span class="input-clear-button"></span>
+                  </div>
+                </div>
+            <!--<div><input  type="text" placeholder="Titulo" /></div>-->
             <p></p>
+                <div class="item-inner">
+                  <div class="item-title item-label">Contenido:</div>
+                  <div class="item-input-wrap" id="contenedorcontenido">
+                    <textarea id="ContenidoAlerta" placeholder="Redactar alerta"></textarea>
+                    <span class="input-clear-button"></span>
+                  </div>
+                </div>
+            <!--
             <div class="item-input-wrap theme-dark">
                     <textarea id="ContenidoAlerta" placeholder="Redactar alerta"></textarea>
-            </div>
+            </div>-->
             <p><h4>Usted se encuentra aquí:</h4></p>
                 <div class="mapaDir2" style="width: 81vw; height: 56vh; border:2px solid #00FF80;" id="mapContainer"></div>
             <p><h4>Enviar alerta a:</h4></p>
