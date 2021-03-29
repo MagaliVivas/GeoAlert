@@ -188,11 +188,11 @@ input {
 #contenedorcontenido {
   width: 95%;
   height: 32vh;
-  border: 1px solid #00FF80;
+  border: 1px solid #3b3b3b;
 }
 
 #contenedortitulo{
-border: 1px solid #00FF80;  
+border: 1px solid #3b3b3b;  
 }
 
 #ContenidoAlerta {
@@ -200,8 +200,15 @@ border: 1px solid #00FF80;
   height: 30vh;
 }
 
+#CrearAlerta{
+  margin-top: 10px;
+}
 .item-input-wrap.theme-dark::after {
   visibility: hidden;
+}
+
+.TitGeoAlert {
+  padding-top: 15%;
 }
 /*
 .text-color-primary {

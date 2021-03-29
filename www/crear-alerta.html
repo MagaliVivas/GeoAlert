@@ -15,7 +15,7 @@
     <div class="page-content theme-dark">
         <div class="block block-strong theme-dark">
                 <div class="item-inner">
-                  <div class="item-title item-label">Titulo</div>
+                  <div class="item-title item-label"><h4>Titulo</h4></div>
                   <div class="item-input-wrap" id="contenedortitulo">
                     <input type="text" id="TituloAlerta" placeholder="Ingrese el titulo" />
                     <span class="input-clear-button"></span>
@@ -24,7 +24,7 @@
             <!--<div><input  type="text" placeholder="Titulo" /></div>-->
             <p></p>
                 <div class="item-inner">
-                  <div class="item-title item-label">Contenido:</div>
+                  <div class="item-title item-label"><h4>Contenido:</h4></div>
                   <div class="item-input-wrap" id="contenedorcontenido">
                     <textarea id="ContenidoAlerta" placeholder="Redactar alerta"></textarea>
                     <span class="input-clear-button"></span>
@@ -64,8 +64,8 @@
             <div id="UsuarioExt" class="invisible">
                 <div><input id="DestinatarioAlerta" type="text" placeholder="E-mail destinatario" /></div>
             </div>
-            <div id="GrupoExt" class="invisible">
-                <div class="block-title theme-dark">Elegir grupo:</div>
+            <div id="GrupoExt" class="invisible row">
+                <div class="block-title theme-dark col-50">Elegir grupo:</div>
                     <div class="block-title" >
                         <div class="card">
                             <div class="card-content">
@@ -75,6 +75,9 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div class="block-footer theme-dark">
+                                <p>Para ver los grupos, <a href="/ver-grupos/" class="link"> hace click acá</a></p>
                     </div>
             </div>
                 <div id="ZonaExt" class="invisible">

@@ -25,6 +25,7 @@ var app = new Framework7({
       { path: '/crear-grupo/', url: 'crear-grupo.html', },
       { path: '/agregar-contacto/', url: 'agregar-contacto.html', },
       { path: '/adm-cuenta/', url: 'adm-cuenta.html', },
+      { path: '/ver-contacto/', url: 'ver-contacto.html', },
     ]
     // ... other parameters
   });
@@ -177,6 +178,7 @@ $$(document).on('page:init', '.page[data-name="about"]', function (e) {
 
 $$(document).on('page:init', '.page[data-name="agregar-contacto"]', function (e) {
 var i = 0;
+var IntegrantesGrupo= new Array();
     // Do something here when page with data-name="about" attribute loaded and initialized
     console.log("VISTA AgregarContactos");
     var UsuariosRef = db.collection("Usuarios").orderBy('nombre'.toLowerCase());
@@ -187,22 +189,24 @@ var i = 0;
             /*.onSnapshot((querySnapchot) =>{
                 querySnapshot.forEach((doc) => {*/
                     console.log(doc.id, " => ", doc.data());
-                    ElNombre = doc.data().nombre;
-                    $$("#ResulBusquedaUsers").append(`<li class="item-content ">
-                                                        <div class="item-inner">
-                                                            <div class="item-title UserBusqueda NoSelect" id="`+doc.id+`"><p>`+ElNombre+ `</p>`+ doc.id +` </div>
-                                                        </div>
-                                                    </li>`);
-
-                });
-                $$(".UserBusqueda").on('click', function() {
-                    console.log(this.id);
-                    UserEmail=this.id; 
-                    console.log("El valor de el mail es " + UserEmail);
-                   // UserEmail++;
-                    //console.log("El email antes de entrar a la funcion es " + UserEmail);
-                    CrearGrupo(UserEmail);
-                })
+                    Prueba = doc.id
+                    if (Prueba != EmailActivo) {
+                        ElNombre = doc.data().nombre;
+                        $$("#ResulBusquedaUsers").append(`<li class="item-content ">
+                                                            <div class="item-inner">
+                                                                <div class="item-title UserBusqueda NoSelect" id="`+doc.id+`"><p>`+ElNombre+ `</p>`+ doc.id +` </div>
+                                                            </div>
+                                                        </li>`);
+                        }
+                    });
+                    $$(".UserBusqueda").on('click', function() {
+                        console.log(this.id);
+                        UserEmail=this.id; 
+                        console.log("El valor de el mail es " + UserEmail);
+                       // UserEmail++;
+                        //console.log("El email antes de entrar a la funcion es " + UserEmail);
+                        CrearGrupo(IntegrantesGrupo);
+                    })
             }) 
             .catch((error) => {
                 console.log("Error getting documents:" + error);
@@ -253,8 +257,8 @@ $$(document).on('page:init', '.page[data-name="ver-grupos"]', function (e) {
                                 <div class="item-title">`+doc.data().Nombre+`</div>
                             </div>
                         </a>
-                        <div class="accordion-item-content">
-                            <div class="block"><p>`+doc.data().Integrantes+`</p>
+                                                <div class="accordion-item-content">
+                            <div class="block" ><p> Integrantes: </p><p id="MiembrosGrupos">`+doc.data().Integrantes+`</p>
                             </div>
                         </div>
                     </li>
@@ -281,6 +285,7 @@ $$(document).on('page:init', '.page[data-name="crear-grupo"]', function (e) {
 
 $$(document).on('page:init', '.page[data-name="crear-alerta"]', function (e) {
     var EnvioA= "";
+    SubirUbi();
     console.log("vista crear-alerta");
        //MAPA------------------------------------------ 
     var defaultLayers = platform.createDefaultLayers();
@@ -377,7 +382,7 @@ $$(document).on('page:init', '.page[data-name="crear-alerta"]', function (e) {
                         TocoGrupo = this.id;
                         console.log("Toco el grupo con id " + TocoGrupo);
                         //TraeMiembros();
-                        app.dialog.confirm('¿Desea enviar la alerta' + TocoGrupo + '?', '¡Atención!', function () {TraeMiembros()});
+                        app.dialog.confirm('¿Desea enviar la alerta a este grupo?', '¡Atención!', function () {TraeMiembros()});
                         })  
                     })
                 .catch((error) => {
@@ -464,7 +469,7 @@ $$(document).on('page:init', '.page[data-name="crear-alerta"]', function (e) {
             
         } else {
                 console.log("llegue al dialog alert");
-                app.dialog.alert("Complete todos los campos", "Atención");
+                //app.dialog.alert("Complete todos los campos", "Atención");
             } 
         } 
     })
@@ -527,27 +532,6 @@ $$(document).on('page:init', '.page[data-name="inicio"]', function (e) {
     })
 //------------------------------------
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     //VISUALIZACION DE RECIBIDAS
     $$("#ContRecibidas").on('click', function() {
         $$("#AlertasRecibidas2").html("");
@@ -577,7 +561,7 @@ $$(document).on('page:init', '.page[data-name="inicio"]', function (e) {
                 <div class="block-title"><h3>`+TituloRec+`</h3></div>
                     <div class="block-header">Recibida de: `+ CreadorRec+ `</div>
                         <p>`+ContenidoRec+` </p>
-                    <div class="block-footer "><button class="button col BtnResponder" id="`+CreadorRec+`">Toque aquí para responder</button>
+                    <div class="block-footer"><button class="button col TocaResponder" id="`+CreadorRec+`">Toque aquí para responder</button>
                 </div>
                 `);
             });
@@ -594,7 +578,7 @@ $$(document).on('page:init', '.page[data-name="inicio"]', function (e) {
                 <div class="block-title"><h3>`+TituloRec+`</h3></div>
                     <div class="block-header">Recibida de: `+ CreadorRec+ `</div>
                         <p>`+ContenidoRec+` </p>
-                    <div class="block-footer "><button class="button col BtnResponder" id="`+CreadorRec+`">Toque aquí para responder</button>
+                    <div class="block-footer "><button class="button col TocaResponder" id="`+CreadorRec+`">Toque aquí para responder</button>
                 </div>
                 `);
             });
@@ -624,7 +608,7 @@ $$(document).on('page:init', '.page[data-name="inicio"]', function (e) {
                 <div class="block-title"><h3>`+TituloRec+`</h3></div>
                     <div class="block-header">Recibida de: `+ CreadorRec+ `</div>
                         <p>`+ContenidoRec+` </p>
-                    <div class="block-footer"><button class="button col BtnResponder" id="`+CreadorRec+`">Toque aquí para responder</button></div>
+                    <div class="block-footer "><button class="button col TocaResponder" id="`+CreadorRec+`">Toque aquí para responder</button></div>
                 </div>
             `);
         });
@@ -641,12 +625,12 @@ $$(document).on('page:init', '.page[data-name="inicio"]', function (e) {
                 <div class="block-title"><h3>`+TituloRec+`</h3></div>
                     <div class="block-header">Recibida de: `+ CreadorRec+ `</div>
                         <p>`+ContenidoRec+` </p>
-                    <div class=" block-footer"><button class="button col BtnResponder" id="`+CreadorRec+`">Toque aquí para responder</button></div>
+                    <div class=" block-footer"><button class="button col TocaResponder" id="`+CreadorRec+`">Toque aquí para responder</button></div>
                 </div>
                 `);
             });
         })
-        $$(".BtnResponder").on('click', function () {
+        $$(".TocaResponder").on('click', function () {
             console.log("Ya hice click en el creador " + CreadorRec);
         })
     })
@@ -684,7 +668,7 @@ function CrearUsuario(varEmail,varPassword) {
         .then(function(){
             console.log("Usuario creado");
             mainView.router.navigate('/inicio/');
-            SubirUsuario;
+            SubirUsuario();
         } )
         .catch(function(error) {
             // Handle Errors here.
@@ -724,7 +708,7 @@ function Destinatarios(Emaildest) {
 
 function SubirUsuario () {
     console.log('Llegue a subir usuario');
-    db.collection('Usuarios').doc(Email).set({
+    db.collection('Usuarios').doc(EmailActivo).set({
                 nombre : NombreUsuario,
                 })
     console.log('Subi el nombre');
@@ -791,11 +775,19 @@ function ActualizarUbicacion(latitudUser, longitudUser, EmailActivo) {
         })
 }
 
-function CrearGrupo() {
+function CrearGrupo(IntegrantesGrupo) {
     //UserEmail += 1;
+    var Busqueda;
     console.log("El user email es " + UserEmail);
-    IntegrantesGrupo.push(UserEmail);
-    console.log(IntegrantesGrupo);
+    Busqueda = IntegrantesGrupo.indexOf(UserEmail);
+    if (Busqueda == -1) {
+        console.log("llegue a comparar el email");
+        IntegrantesGrupo.push(UserEmail);
+        console.log(IntegrantesGrupo);
+    } else {
+        app.dialog.alert("El usuario ya pertenece al grupo");
+    }
+    
 }
 
 
@@ -819,4 +811,12 @@ function TraeMiembros(){
             CreadorAlerta = EmailActivo; 
             CrearAlerta();}
     })
+}
+
+function SubirUbi() {
+    db.collection('Ubicacion').doc(EmailActivo).set({
+                Latitud : latitudUser,
+                Longitud : longitudUser
+                }) 
+    console.log("Subi las coordenadas, latitud : " + latitudUser + ", longitud: " + longitudUser);
 }
