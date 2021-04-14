@@ -1,26 +1,11 @@
 
 # Bienvenid@!! 
 
-En este repositorio podés encontrar un template de Framework7 listo para usar para el desarrollo de aplicaciones con Apache Cordova.
+## GeoAlert: 
 
-## Qué es [Framework7](https://framework7.io/)?
+La idea de la aplicación es el envío de información en tipo alerta. Permitiendo que, además de enviar dichas alertas a grupos específicos previamente seleccionados (grupos de familiares, compañeros de trabajo, etc.)  se pueda utilizar la geolocalización con la que cuentan la mayoría de los celulares para permitir el envío en rangos de zonas elegidos, permitiendo así, que las personas dentro de ese rango reciban esa alerta y tengan la posibilidad de responder a la misma si así lo desean. Por ejemplo, si deseo contactar a mis vecinos para informarles de alguna eventualidad, puedo enviar una alerta contando lo ocurrido a todas las personas que se encuentren a 100m a la redonda de donde estoy ubicado.
 
-Es un framework CSS con una librería propia de manejo del DOM, similar a JQuery.
-El resultado de las aplicaciones respeta los estilos de iOS/Android como si fueran nativas.
-
-## [Apache Cordova](https://cordova.apache.org/)
-
-Nos permite el desarrollo de aplicaciones híbridas. Y de esta manera con un solo código poner tener aplicaciones para Android e iOS.
-
-## Cómo descargo el template?
-
-Crea y/o ingresa a tu carpeta inicial del desarrollo. Descarga el template con el comando:
-
-    git clone https://github.com/JorgePHI/f7-v606
-
-Ingresando luego en la carpeta f7-v606 podrá usar el template de Framework 7, Version 6.0.6
-
-"# GeoAlert" 
-"# GeoAlert" 
-"# GeoAlert" 
-"# GeoAlert" 
+## Información adicional: 
+    - 50hs de desarrollo hasta el momento.
+    - Aplicación de metología SCRUM/Kanban (Scrumban) con Trello.
+    - Tecnologías: HTML5 / CSS3 / JavaScript / JQuery / Framework 7 / Firebase / Bases de datos SQL y NoSQL. 
